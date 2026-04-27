@@ -1,0 +1,24 @@
+{
+  "name": "casestudybyteful",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bhardwaj-04x/Case_Study_byteful.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/bhardwaj-04x/Case_Study_byteful/issues"
+  },
+  "homepage": "https://github.com/bhardwaj-04x/Case_Study_byteful#readme",
+  "dependencies": {
+    "playwright": "^1.59.1"
+  }
+}
