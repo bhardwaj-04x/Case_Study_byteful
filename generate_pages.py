@@ -1,703 +1,606 @@
+"""
+generate_pages.py
+Reads case-study-input-sheet.csv and produces one WordPress-safe HTML file
+per case study.
+
+WordPress instructions (printed inside each generated file):
+  1. Add FA CDN link to Appearance > Theme Options > Custom Code (head):
+       <link rel="stylesheet"
+             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  2. Open the WordPress page, add a Custom HTML block.
+  3. Paste ONLY the content between the WORDPRESS PASTE START / END markers.
+"""
+
 import csv
-import os
+import re
 from pathlib import Path
+from string import Template          # uses $var syntax — no curly-brace collision
 
-# Read the CSV file
-csv_file = Path(r'c:\Users\prana\OneDrive\Desktop\CaseStudyByteful\case-study-input-sheet.csv')
+CSV_FILE = Path(r'C:\Users\prana\OneDrive\Desktop\CaseStudyByteful\case-study-input-sheet.csv')
 
-case_studies = []
-with open(csv_file, 'r', encoding='utf-8') as f:
-    reader = csv.reader(f)
-    headers = next(reader)  # Skip header row
+# ── Icon lookup ───────────────────────────────────────────────────────────────
+def platform_icon(platform):
+    p = platform.lower()
+    if 'netsuite'   in p: return 'fa-solid fa-cloud'
+    if 'salesforce' in p: return 'fa-solid fa-cloud-bolt'
+    if 'graphql'    in p: return 'fa-solid fa-diagram-project'
+    if 'react'      in p: return 'fa-brands fa-react'
+    if 'python'     in p: return 'fa-brands fa-python'
+    if 'node'       in p: return 'fa-brands fa-node-js'
+    if 'mongo'      in p: return 'fa-solid fa-database'
+    if 'postgres'   in p: return 'fa-solid fa-database'
+    if 'lwc'        in p: return 'fa-solid fa-bolt'
+    return 'fa-solid fa-layer-group'
 
-    for row in reader:
-        if len(row) >= 9:  # Ensure we have enough columns
-            case_study = {
-                'id': row[0].strip(),
-                'rating': row[1].strip(),
-                'comments': row[2].strip(),
-                'story': row[3].strip(),
-                'problem': row[4].strip(),
-                'solution': row[5].strip(),
-                'developer': row[6].strip(),
-                'customer': row[7].strip(),
-                'platform': row[8].strip()
-            }
-            case_studies.append(case_study)
 
-print(f"Found {len(case_studies)} case studies")
+# ── Content helpers ───────────────────────────────────────────────────────────
+def make_tech_chips(platform):
+    parts = [p.strip() for p in re.split(r'[,/\n]', platform) if p.strip()]
+    return '\n'.join(f'<span class="cs-chip">{c}</span>' for c in parts[:8])
 
-# Filter for Review and Publish
-review_studies = [cs for cs in case_studies if cs['rating'].lower() == 'review']
-publish_studies = [cs for cs in case_studies if cs['rating'].lower() == 'publish']
 
-print(f"Review studies: {len(review_studies)}")
-print(f"Publish studies: {len(publish_studies)}")
+def section_bullets(text):
+    """Return list of {title, body} dicts for lines like 'Heading: detail'."""
+    pattern = re.compile(r'^(.+?):\s*(.+)$')
+    cards = []
+    for line in text.split('\n'):
+        m = pattern.match(line.strip())
+        if m:
+            cards.append({'title': m.group(1).strip(), 'body': m.group(2).strip()})
+    return cards
 
-# Template for HTML generation
-html_template = '''<!DOCTYPE html>
+
+def make_challenge_cards(text):
+    cards = section_bullets(text)
+    if not cards:
+        paras = [p.strip() for p in text.split('\n\n') if p.strip()]
+        return '\n'.join(f'<p class="cs-prose">{p}</p>' for p in paras[:4])
+    rows = []
+    for c in cards[:6]:
+        rows.append(
+            f'<div class="cs-card cs-card--challenge">'
+            f'<h4>{c["title"]}</h4><p>{c["body"]}</p>'
+            f'</div>'
+        )
+    return '<div class="cs-grid cs-grid--3">\n' + '\n'.join(rows) + '\n</div>'
+
+
+def make_solution_cards(text):
+    cards = section_bullets(text)
+    if not cards:
+        # Numbered list fallback
+        lines = [l.strip() for l in text.split('\n') if l.strip()]
+        items = [re.sub(r'^[\d+\.\-\*•]\s*', '', l) for l in lines if l]
+        if items:
+            lis = '\n'.join(f'<li>{i}</li>' for i in items[:10])
+            return f'<ul class="cs-prose">{lis}</ul>'
+        return f'<p class="cs-prose">{text}</p>'
+
+    rows = []
+    for c in cards[:6]:
+        rows.append(
+            f'<div class="cs-card cs-card--solution">'
+            f'<div class="cs-card__icon"><i class="fa-solid fa-check"></i></div>'
+            f'<div><h4>{c["title"]}</h4><p>{c["body"]}</p></div>'
+            f'</div>'
+        )
+    return '<div class="cs-grid cs-grid--2">\n' + '\n'.join(rows) + '\n</div>'
+
+
+def make_story_block(story):
+    if not story or not story.strip():
+        return ''
+    paras = [p.strip() for p in story.split('\n\n') if p.strip()]
+    inner = '\n'.join(f'<p class="cs-prose">{p}</p>' for p in paras[:3])
+    return (
+        '<div class="cs-section">'
+        '<div class="cs-inner">'
+        '<span class="cs-section__eyebrow">Overview</span>'
+        '<h2 class="cs-section__title">Background</h2>'
+        + inner +
+        '</div></div>'
+    )
+
+
+def derive_hero_title(customer, problem):
+    first = problem.strip().split('\n')[0].strip()
+    if ':' in first:
+        topic = first.split(':')[0].strip()
+    else:
+        topic = ' '.join(first.split()[:8])
+    return f"{customer}: {topic}"
+
+
+def derive_conclusion(customer, platform_short, solution):
+    first = solution.strip().split('\n')[0].strip()[:120]
+    return (
+        f"By partnering with Byteful, {customer} transformed their operations "
+        f"using {platform_short}. {first}. "
+        f"The result was a scalable, reliable system that reduced manual overhead "
+        f"and delivered measurable business value."
+    )
+
+
+# ── CSS (written as a plain string — no Python format placeholders) ───────────
+CSS = """\
+<style>
+/* All rules are scoped under .cs-pro — zero bleed into the WordPress theme */
+.cs-pro {
+  --cs-red:    #E90004;
+  --cs-black:  #0b0b0b;
+  --cs-dark:   #1a1a1a;
+  --cs-white:  #ffffff;
+  --cs-muted:  #555555;
+  --cs-light:  #f7f8fc;
+  --cs-border: #e5e7eb;
+  font-family: inherit;
+  color: #111111;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Hero ─────────────────────────────────────────────────────── */
+.cs-pro .cs-hero {
+  position: relative;
+  padding: 90px 24px 80px;
+  background: var(--cs-black);
+  text-align: center;
+  overflow: hidden;
+}
+.cs-pro .cs-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(233,0,4,.18) 0%, transparent 60%);
+  pointer-events: none;
+}
+.cs-pro .cs-hero__badge {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 5px 18px;
+  border: 1px solid var(--cs-red);
+  border-radius: 999px;
+  color: var(--cs-red);
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+.cs-pro .cs-hero__title {
+  position: relative;
+  margin: 0 auto 18px;
+  max-width: 860px;
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  font-weight: 800;
+  color: var(--cs-white);
+  line-height: 1.15;
+}
+.cs-pro .cs-hero__sub {
+  position: relative;
+  margin: 0 auto;
+  max-width: 620px;
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  color: rgba(255,255,255,.72);
+}
+
+/* ── Info bar ─────────────────────────────────────────────────── */
+.cs-pro .cs-infobar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px 24px;
+  background: var(--cs-white);
+  border-bottom: 1px solid var(--cs-border);
+}
+.cs-pro .cs-infobar__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1 1 220px;
+  min-width: 200px;
+  max-width: 320px;
+  padding: 12px 16px;
+  border: 1px solid var(--cs-border);
+  border-radius: 10px;
+  background: var(--cs-white);
+  box-shadow: 0 4px 14px rgba(0,0,0,.05);
+  transition: border-color .25s, transform .25s;
+}
+.cs-pro .cs-infobar__item:hover {
+  border-color: var(--cs-red);
+  transform: translateY(-2px);
+}
+.cs-pro .cs-infobar__icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: rgba(233,0,4,.09);
+  color: var(--cs-red);
+  font-size: 1rem;
+}
+.cs-pro .cs-infobar__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--cs-muted);
+  margin-bottom: 2px;
+}
+.cs-pro .cs-infobar__value {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--cs-black);
+}
+
+/* ── Sections ─────────────────────────────────────────────────── */
+.cs-pro .cs-section {
+  width: 100%;
+  padding: 72px 24px;
+  background: var(--cs-white);
+}
+.cs-pro .cs-section--alt  { background: var(--cs-light); }
+.cs-pro .cs-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+.cs-pro .cs-section__eyebrow {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--cs-red);
+}
+.cs-pro .cs-section__title {
+  margin: 0 0 28px;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  font-weight: 800;
+  color: var(--cs-black);
+  line-height: 1.2;
+}
+.cs-pro .cs-section__title::after {
+  content: '';
+  display: block;
+  margin-top: 12px;
+  width: 48px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--cs-red);
+}
+
+/* ── Cards ────────────────────────────────────────────────────── */
+.cs-pro .cs-grid {
+  display: grid;
+  gap: 20px;
+  margin-top: 8px;
+}
+.cs-pro .cs-grid--2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.cs-pro .cs-grid--3 { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+
+.cs-pro .cs-card {
+  padding: 26px;
+  border: 1px solid var(--cs-border);
+  border-radius: 14px;
+  background: var(--cs-white);
+  box-shadow: 0 8px 24px rgba(0,0,0,.05);
+  transition: border-color .25s, transform .3s, box-shadow .3s;
+}
+.cs-pro .cs-card:hover {
+  border-color: var(--cs-red);
+  transform: translateY(-5px);
+  box-shadow: 0 16px 40px rgba(233,0,4,.12);
+}
+.cs-pro .cs-card h4 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--cs-black);
+}
+.cs-pro .cs-card p {
+  margin: 0;
+  font-size: 0.93rem;
+  color: var(--cs-muted);
+  line-height: 1.7;
+}
+.cs-pro .cs-card--challenge {
+  border-top: 3px solid var(--cs-red);
+}
+.cs-pro .cs-card--solution {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.cs-pro .cs-card__icon {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--cs-red), var(--cs-dark));
+  color: var(--cs-white);
+  font-size: 0.9rem;
+}
+
+/* ── Prose ────────────────────────────────────────────────────── */
+.cs-pro .cs-prose {
+  color: var(--cs-muted);
+  line-height: 1.85;
+  max-width: 840px;
+  margin-bottom: 16px;
+}
+.cs-pro .cs-prose ul {
+  padding-left: 22px;
+  margin: 0;
+}
+.cs-pro .cs-prose li { margin-bottom: 8px; }
+
+/* ── Visual band ──────────────────────────────────────────────── */
+.cs-pro .cs-band {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 240px;
+  padding: 60px 24px;
+  position: relative;
+  background: var(--cs-black);
+  overflow: hidden;
+}
+.cs-pro .cs-band::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(233,0,4,.25), transparent 60%);
+  pointer-events: none;
+}
+.cs-pro .cs-band__inner   { position: relative; z-index: 1; }
+.cs-pro .cs-band__title {
+  margin: 0 0 12px;
+  font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+  font-weight: 800;
+  color: var(--cs-white);
+}
+.cs-pro .cs-band__sub {
+  color: rgba(255,255,255,.68);
+  font-size: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.cs-pro .cs-tech-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 20px;
+}
+.cs-pro .cs-chip {
+  padding: 6px 16px;
+  border: 1px solid rgba(233,0,4,.5);
+  border-radius: 999px;
+  color: var(--cs-red);
+  background: rgba(233,0,4,.07);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+/* ── Conclusion ───────────────────────────────────────────────── */
+.cs-pro .cs-conclusion {
+  padding: 72px 24px;
+  background: var(--cs-white);
+  text-align: center;
+}
+.cs-pro .cs-conclusion__icon {
+  font-size: 2.6rem;
+  color: var(--cs-red);
+  margin-bottom: 18px;
+  display: block;
+}
+.cs-pro .cs-conclusion__title {
+  margin: 0 0 18px;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 800;
+  color: var(--cs-black);
+}
+.cs-pro .cs-conclusion__text {
+  max-width: 720px;
+  margin: 0 auto;
+  color: var(--cs-muted);
+  line-height: 1.85;
+}
+
+/* ── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .cs-pro .cs-hero        { padding: 64px 16px 56px; }
+  .cs-pro .cs-section     { padding: 48px 16px; }
+  .cs-pro .cs-conclusion  { padding: 48px 16px; }
+  .cs-pro .cs-infobar     { overflow-x: auto; flex-wrap: nowrap; justify-content: flex-start; }
+  .cs-pro .cs-grid--2,
+  .cs-pro .cs-grid--3     { grid-template-columns: 1fr; }
+}
+</style>"""
+
+
+def build_page(cs, status_label):
+    cid       = cs['id']
+    customer  = cs['customer']
+    developer = cs['developer']
+    platform  = cs['platform']
+    story     = cs['story']
+    problem   = cs['problem']
+    solution  = cs['solution']
+
+    # Short platform label (max 60 chars)
+    parts = [p.strip() for p in re.split(r'[,/\n]', platform) if p.strip()]
+    platform_short = ', '.join(parts)
+    if len(platform_short) > 60:
+        platform_short = ', '.join(parts[:3]) + '…'
+
+    icon            = platform_icon(platform)
+    hero_title      = derive_hero_title(customer, problem)
+    hero_sub        = (
+        f"How Byteful helped {customer} solve a critical business challenge "
+        f"using {platform_short}."
+    )
+    challenge_block = make_challenge_cards(problem)
+    solution_block  = make_solution_cards(solution)
+    story_block     = make_story_block(story)
+    tech_chips      = make_tech_chips(platform)
+    conclusion      = derive_conclusion(customer, platform_short, solution)
+
+    body = f"""\
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{title}</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case Study – {customer}</title>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
-<style>
-/* =========================
-   DEFAULT (mobile first)
-========================= */
-.d-none {{
-  display: none !important;
-}}
+<!--
+  WORDPRESS INSTRUCTIONS
+  1. Add to Appearance > Theme Options > Custom Head Code (if FA not already loaded):
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  2. In the page editor, add a "Custom HTML" block.
+  3. Paste ONLY the content between the markers below into that block.
+-->
+
+<!-- === WORDPRESS PASTE START === -->
+{CSS}
 
-.d-block {{
-  display: block !important;
-}}
-
-/* =========================
-   MD BREAKPOINT (≥768px)
-========================= */
-@media (min-width: 768px) {{
-  .d-md-none {{
-    display: none !important;
-  }}
-
-  .d-md-block {{
-    display: block !important;
-  }}
-}}
-
-/* =========================
-   OPTIONAL: reverse behavior for mobile
-========================= */
-@media (max-width: 767px) {{
-  .d-md-none {{
-    display: block !important;
-  }}
-
-  .d-md-block {{
-    display: none !important;
-  }}
-}}
-:root{{
-  --primary:#E90004;
-  --black:#0b0b0b;
-  --dark:#1a1a1a;
-  --text:#111;
-  --muted:#666;
-  --light:#f6f7fb;
-  --border:#eaeaea;
-}}
-
-body {{
-  margin:0;
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: var(--text);
-  background:#f5f7fb;
-  line-height:1.6;
-}}
-
-p,
-ul {{
-  margin:0;
-}}
-
-ul {{
-  padding:0;
-}}
-
-.cs-pro {{
-  width:100%;
-}}
-
-/* =========================
-   HERO
-========================= */
-
-.cs-hero{{
-  position:relative;
-  min-height:520px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:100px 20px;
-  background:linear-gradient(135deg,var(--black),var(--dark));
-  overflow:hidden;
-}}
-
-.cs-hero::before{{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1600&q=80') center/cover no-repeat;
-  opacity:0.12;
-}}
-
-.cs-hero h1{{
-  position:relative;
-  font-size:clamp(1.8rem,4vw,3.2rem);
-  font-weight:900;
-  color:#fff;
-  max-width:900px;
-  line-height:1.2;
-}}
-
-.cs-hero p{{
-  position:relative;
-  margin-top:14px;
-  font-size:clamp(0.95rem,2vw,1.1rem);
-  color:rgba(255,255,255,0.8);
-}}
-
-/* badge */
-.cs-hero-badge{{
-  position:relative;
-  margin-bottom:18px;
-  padding:6px 16px;
-  border-radius:50px;
-  border:1px solid var(--primary);
-  color:var(--primary);
-  background:rgba(233,0,4,0.08);
-  font-size:12px;
-  letter-spacing:2px;
-  text-transform:uppercase;
-}}
-
-/* =========================
-   INFO BAR
-========================= */
-
-.cs-infobar{{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:14px;
-  padding:18px 12px;
-  background:#fff;
-  border-bottom:1px solid var(--border);
-}}
-
-.cs-infobar-item{{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:10px 14px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:#fff;
-  box-shadow:0 6px 20px rgba(0,0,0,0.04);
-  transition:0.3s;
-}}
-
-.cs-infobar-item:hover{{
-  transform:translateY(-2px);
-  border-color:var(--primary);
-}}
-
-.cs-infobar-item i{{
-  width:38px;
-  height:38px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:rgba(233,0,4,0.1);
-  color:var(--primary);
-  border-radius:10px;
-}}
-
-.cs-infobar{{
-  padding:18px 20px;
-}}
-
-.cs-infobar-item{{
-  flex:1 1 240px;
-  min-width:240px;
-  justify-content:flex-start;
-}}
-
-.cs-infobar-item div{{
-  line-height:1.35;
-}}
-
-.cs-infobar-item strong{{
-  display:block;
-  font-size:0.95rem;
-  font-weight:700;
-}}
-
-.cs-section h2{{
-  margin-top:0;
-}}
-
-.cs-visual{{
-  padding:60px 0;
-}}
-
-.cs-visual-content{{
-  color:#fff;
-  text-align:center;
-}}
-
-/* =========================
-   INTRO
-========================= */
-
-.cs-intro{{
-  width:100%;
-  padding:80px 20px;
-  background:#fff;
-}}
-
-.cs-intro .section-inner{{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:24px;
-  max-width:1200px;
-  margin:auto;
-  padding:0 20px;
-}}
-
-.cs-intro > div{{
-  background:#fff;
-  padding:24px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  border-left:4px solid var(--primary);
-  box-shadow:0 10px 30px rgba(0,0,0,0.04);
-}}
-
-.cs-intro p{{
-  color:var(--muted);
-  line-height:1.8;
-}}
-
-/* =========================
-   SECTION BASE
-========================= */
-
-.cs-section{{
-  width:100%;
-  padding:80px 20px;
-  background:#fff;
-}}
-
-.cs-section.alt{{
-  width:100%;
-  background:#f8f9fc;
-  padding:80px 20px;
-}}
-
-.section-inner{{
-  max-width:1200px;
-  margin:auto;
-  padding:0 20px;
-}}
-
-.cs-section h2{{
-  font-size:clamp(1.4rem,3vw,2rem);
-  font-weight:900;
-  margin-bottom:20px;
-}}
-
-.cs-section h2::after{{
-  content:'';
-  width:60px;
-  height:4px;
-  background:var(--primary);
-  display:block;
-  margin-top:10px;
-  border-radius:2px;
-}}
-
-.cs-section > p{{
-  color:var(--muted);
-  line-height:1.8;
-  max-width:750px;
-}}
-
-/* =========================
-   PROBLEM LIST
-========================= */
-
-.cs-problem-list{{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:16px;
-  margin-top:30px;
-}}
-
-.cs-problem-list li{{
-  list-style:none;
-  display:flex;
-  gap:12px;
-  padding:18px;
-  border-radius:12px;
-  background:#fff;
-  border:1px solid var(--border);
-  box-shadow:0 6px 20px rgba(0,0,0,0.04);
-  transition:0.3s;
-}}
-
-.cs-problem-list li:hover{{
-  transform:translateY(-4px);
-  border-color:var(--primary);
-}}
-
-/* =========================
-   CARDS (SOLUTION)
-========================= */
-
-.cs-cards{{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:18px;
-  margin-top:30px;
-}}
-
-.cs-cards .card{{
-  background:#fff;
-  border-radius:14px;
-  padding:26px;
-  text-align:center;
-  border:1px solid var(--border);
-  box-shadow:0 8px 25px rgba(0,0,0,0.05);
-  transition:0.3s;
-}}
-
-.cs-cards .card:hover{{
-  transform:translateY(-8px);
-  border-color:var(--primary);
-  box-shadow:0 18px 50px rgba(233,0,4,0.18);
-}}
-
-.cs-cards .card i{{
-  width:60px;
-  height:60px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin:0 auto 14px;
-  border-radius:14px;
-  background:linear-gradient(135deg,var(--primary),var(--black));
-  color:#fff;
-  font-size:1.3rem;
-}}
-
-/* =========================
-   FLOW
-========================= */
-
-.cs-flow{{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  align-items:center;
-  gap:12px;
-  margin-top:30px;
-}}
-
-.fa{{
-  font-size:1.3rem !important;
-}}
-
-.cs-flow-step{{
-  font-size: 1rem;
-  width:150px;
-  height: 137px;
-  text-align:center;
-  padding:14px;
-  border-radius:14px;
-  background:#fff;
-}}
-
-.step-icon{{
-  width:60px;
-  height:60px;
-  margin:0 auto 10px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:linear-gradient(135deg,var(--primary),var(--black));
-  color:#fff;
-}}
-
-.cs-flow-arrow{{
-  color:var(--primary);
-}}
-
-/* =========================
-   COUNTERS
-========================= */
-
-.cs-counters{{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:18px;
-  margin-top:30px;
-}}
-
-.cs-counter-box{{
-  background:linear-gradient(135deg,var(--black),var(--dark));
-  color:#fff;
-  border-radius:16px;
-  padding:30px 18px;
-  text-align:center;
-  box-shadow:0 20px 60px rgba(233,0,4,0.15);
-  transition:0.3s;
-}}
-
-.cs-counter-box:hover{{
-  transform:translateY(-6px);
-}}
-
-.counter-num{{
-  font-size:2.6rem;
-  font-weight:900;
-}}
-
-/* =========================
-   PROGRESS
-========================= */
-
-.cs-progress-wrap{{
-  margin-top:40px;
-}}
-
-.progress-box{{
-  margin-bottom:20px;
-}}
-
-.progress-box > span{{
-  display:flex;
-  justify-content:space-between;
-  font-weight:600;
-}}
-
-.bar{{
-  height:10px;
-  background:#eee;
-  border-radius:50px;
-  overflow:hidden;
-}}
-
-.bar > div{{
-  height:100%;
-  width:0;
-  background:linear-gradient(90deg,var(--primary),var(--black));
-  transition:1.2s ease;
-}}
-
-/* =========================
-   VISUAL SECTION
-========================= */
-
-.cs-visual{{
-  width:100%;
-  height:300px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  position:relative;
-  background:linear-gradient(135deg,var(--black),var(--dark));
-}}
-
-.cs-visual::before{{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=1600&q=80') center/cover no-repeat;
-  opacity:0.15;
-}}
-
-.cs-conclusion{{
-  width:100%;
-  padding:80px 20px;
-  background:#fff;
-  text-align:center;
-}}
-
-.big-icon{{
-  font-size:3rem !important;
-  color:var(--primary);
-  margin-bottom:16px;
-}}
-
-.cs-visual-content h3{{
-  color:var(--primary);
-}}
-
-.cs-visual-content p{{
-  color:white;
-}}
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width:768px){{
-  .fa{{
-    font-size: 0.8rem !important;
-  }}
-
-  .cs-intro{{
-    grid-template-columns:1fr;
-    padding:40px 16px;
-  }}
-
-  .cs-hero{{
-    min-height:420px;
-    padding:80px 16px;
-  }}
-
-  .cs-flow{{
-    flex-direction:column;
-  }}
-
-  .cs-section{{
-    padding:40px 16px;
-  }}
-
-  .cs-conclusion{{
-    padding:40px 16px;
-  }}
-
-  .cs-infobar{{
-    flex-wrap:nowrap;
-    overflow-x:auto;
-    justify-content:flex-start;
-  }}
-}}
-</style>
-<body>
 <section class="cs-pro">
 
+  <!-- HERO -->
   <div class="cs-hero">
-    <span class="cs-hero-badge"><i class="fa fa-database"></i> &nbsp; Case Study</span>
-    <h1>{hero_title}</h1>
-    <p>{hero_subtitle}</p>
+    <span class="cs-hero__badge">
+      <i class="{icon}"></i>&nbsp; Case Study
+    </span>
+    <h1 class="cs-hero__title">{hero_title}</h1>
+    <p class="cs-hero__sub">{hero_sub}</p>
   </div>
 
+  <!-- INFO BAR -->
   <div class="cs-infobar">
-    <div class="cs-infobar-item">
-      <i class="fa fa-building"></i>
-      <div><strong>Client</strong><br><span>{customer}</span></div>
+    <div class="cs-infobar__item">
+      <div class="cs-infobar__icon"><i class="fa-solid fa-building"></i></div>
+      <div>
+        <div class="cs-infobar__label">Client</div>
+        <div class="cs-infobar__value">{customer}</div>
+      </div>
     </div>
-    <div class="cs-infobar-item">
-      <i class="fa fa-user"></i>
-      <div><strong>Developer</strong><br><span>{developer}</span></div>
+    <div class="cs-infobar__item">
+      <div class="cs-infobar__icon"><i class="fa-solid fa-user-tie"></i></div>
+      <div>
+        <div class="cs-infobar__label">Developer</div>
+        <div class="cs-infobar__value">{developer}</div>
+      </div>
     </div>
-    <div class="cs-infobar-item">
-      <i class="fa-solid fa-layer-group"></i>
-      <div><strong>Tech Stack</strong><br><span>{platform}</span></div>
+    <div class="cs-infobar__item">
+      <div class="cs-infobar__icon"><i class="{icon}"></i></div>
+      <div>
+        <div class="cs-infobar__label">Tech Stack</div>
+        <div class="cs-infobar__value">{platform_short}</div>
+      </div>
     </div>
-    <div class="cs-infobar-item">
-      <i class="fa fa-server"></i>
-      <div><strong>Status</strong><br><span>{status}</span></div>
+    <div class="cs-infobar__item">
+      <div class="cs-infobar__icon"><i class="fa-solid fa-circle-check"></i></div>
+      <div>
+        <div class="cs-infobar__label">Status</div>
+        <div class="cs-infobar__value">{status_label}</div>
+      </div>
     </div>
   </div>
 
-  <div class="cs-intro"><div class="section-inner">
-    <div>
-      <p>
-        {intro_1}
+  {story_block}
+
+  <!-- THE CHALLENGE -->
+  <div class="cs-section cs-section--alt">
+    <div class="cs-inner">
+      <span class="cs-section__eyebrow">The Problem</span>
+      <h2 class="cs-section__title">The Challenge</h2>
+      {challenge_block}
+    </div>
+  </div>
+
+  <!-- VISUAL BAND -->
+  <div class="cs-band">
+    <div class="cs-band__inner">
+      <h3 class="cs-band__title">
+        <i class="fa-solid fa-gears"></i>&nbsp; Built on Modern Technology
+      </h3>
+      <p class="cs-band__sub">
+        Powered by {platform_short} — engineered for reliability and scale.
       </p>
-    </div>
-    <div>
-      <p>
-        {intro_2}
-      </p>
+      <div class="cs-tech-chips">
+        {tech_chips}
+      </div>
     </div>
   </div>
-  </div>
 
-  <div class="cs-section"><div class="section-inner">
-    <h2>The Challenge</h2>
-    <p>{problem}</p>
-  </div>
-  </div>
-
-  <div class="cs-section alt"><div class="section-inner">
-    <h2>The Solution</h2>
-    <p>{solution}</p>
-  </div>
-  </div>
-
-  <div class="cs-visual"><div class="section-inner">
-    <div class="cs-visual-content">
-      <h3><i class="fa fa-circle-nodes"></i> &nbsp; Built on Modern Architecture</h3>
-      <p>Powered by {platform} — engineered for reliability and scale.</p>
+  <!-- THE SOLUTION -->
+  <div class="cs-section">
+    <div class="cs-inner">
+      <span class="cs-section__eyebrow">Our Approach</span>
+      <h2 class="cs-section__title">The Solution</h2>
+      {solution_block}
     </div>
   </div>
-  </div>
 
-  <div class="cs-conclusion"><div class="section-inner">
-    <i class="fa fa-rocket big-icon"></i>
-    <h2>Conclusion</h2>
-    <p>
-      {conclusion}
-    </p>
-  </div>
+  <!-- CONCLUSION -->
+  <div class="cs-conclusion">
+    <div class="cs-inner">
+      <i class="fa-solid fa-trophy cs-conclusion__icon"></i>
+      <h2 class="cs-conclusion__title">Outcome</h2>
+      <p class="cs-conclusion__text">{conclusion}</p>
+    </div>
   </div>
 
 </section>
+<!-- === WORDPRESS PASTE END === -->
 
-</body>
-</html>'''
+</html>"""
 
-def generate_html(case_study, status):
-    """Generate HTML for a case study"""
-    title = f"Case Study {case_study['id']} - {case_study['customer']}"
+    return body
 
-    # Extract key information for hero
-    hero_title = f"Transforming {case_study['customer']} with {case_study['platform']}"
-    hero_subtitle = f"Success story with {case_study['developer']}"
 
-    # Split problem/solution into intro sections
-    problem_parts = case_study['problem'].split('\n\n')[:2]
-    intro_1 = problem_parts[0] if len(problem_parts) > 0 else case_study['problem'][:300] + "..."
-    intro_2 = problem_parts[1] if len(problem_parts) > 1 else "Our solution delivered exceptional results."
+# ── Run ───────────────────────────────────────────────────────────────────────
+with open(CSV_FILE, encoding='utf-8-sig') as f:
+    reader = csv.reader(f, delimiter='\t')
+    next(reader)   # "For Reviewers…" label row
+    next(reader)   # column header row
 
-    # Conclusion
-    conclusion = f"This solution transformed {case_study['customer']}'s operations. By implementing {case_study['platform']}, we achieved significant improvements in efficiency and scalability."
+    case_studies = []
+    for row in reader:
+        if len(row) >= 9 and row[0].strip() and row[0].strip().isdigit():
+            case_studies.append({
+                'id':        row[0].strip(),
+                'rating':    row[1].strip().lower(),
+                'story':     row[3].strip(),
+                'problem':   row[4].strip(),
+                'solution':  row[5].strip(),
+                'developer': row[6].strip(),
+                'customer':  row[7].strip(),
+                'platform':  row[8].strip(),
+            })
 
-    html = html_template.format(
-        title=title,
-        hero_title=hero_title,
-        hero_subtitle=hero_subtitle,
-        customer=case_study['customer'],
-        developer=case_study['developer'],
-        platform=case_study['platform'],
-        status=status,
-        intro_1=intro_1,
-        intro_2=intro_2,
-        problem=case_study['problem'],
-        solution=case_study['solution'],
-        conclusion=conclusion
-    )
+print(f"Found {len(case_studies)} case studies")
 
-    return html
-
-# Generate pages for review studies
-for cs in review_studies:
-    if cs['id']:
-        filename = f"case-study-{cs['id']}-review.html"
-        html_content = generate_html(cs, "In Review")
+for cs in case_studies:
+    rating = cs['rating']
+    if rating in ('review', 'publish'):
+        label    = 'Published' if rating == 'publish' else 'In Review'
+        suffix   = 'publish'   if rating == 'publish' else 'review'
+        filename = f"case-study-{cs['id']}-{suffix}.html"
+        html     = build_page(cs, label)
         with open(filename, 'w', encoding='utf-8') as f:
-            f.write(html_content)
-        print(f"Generated: {filename}")
+            f.write(html)
+        print(f"  {filename}  —  {cs['customer']}")
 
-# Generate pages for publish studies
-for cs in publish_studies:
-    if cs['id']:
-        filename = f"case-study-{cs['id']}-publish.html"
-        html_content = generate_html(cs, "Published")
-        with open(filename, 'w', encoding='utf-8') as f:
-            f.write(html_content)
-        print(f"Generated: {filename}")
-
-print("HTML generation complete!")
+print("Done.")

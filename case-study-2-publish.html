@@ -1,674 +1,421 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Case Study 2 - Published</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case Study – SmallHD</title>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
+<!--
+  WORDPRESS INSTRUCTIONS
+  1. Add to Appearance > Theme Options > Custom Head Code (if FA not already loaded):
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  2. In the page editor, add a "Custom HTML" block.
+  3. Paste ONLY the content between the markers below into that block.
+-->
+
+<!-- === WORDPRESS PASTE START === -->
 <style>
-:root{
-  --primary:#E90004;
-  --black:#0b0b0b;
-  --dark:#1a1a1a;
-  --text:#111;
-  --muted:#666;
-  --light:#f6f7fb;
-  --border:#eaeaea;
+/* All rules are scoped under .cs-pro — zero bleed into the WordPress theme */
+.cs-pro {
+  --cs-red:    #E90004;
+  --cs-black:  #0b0b0b;
+  --cs-dark:   #1a1a1a;
+  --cs-white:  #ffffff;
+  --cs-muted:  #555555;
+  --cs-light:  #f7f8fc;
+  --cs-border: #e5e7eb;
+  font-family: inherit;
+  color: #111111;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
 }
 
-body {
-  margin:0;
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: var(--text);
-  background:#f5f7fb;
-  line-height:1.6;
+/* ── Hero ─────────────────────────────────────────────────────── */
+.cs-pro .cs-hero {
+  position: relative;
+  padding: 90px 24px 80px;
+  background: var(--cs-black);
+  text-align: center;
+  overflow: hidden;
+}
+.cs-pro .cs-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(233,0,4,.18) 0%, transparent 60%);
+  pointer-events: none;
+}
+.cs-pro .cs-hero__badge {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 5px 18px;
+  border: 1px solid var(--cs-red);
+  border-radius: 999px;
+  color: var(--cs-red);
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+.cs-pro .cs-hero__title {
+  position: relative;
+  margin: 0 auto 18px;
+  max-width: 860px;
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  font-weight: 800;
+  color: var(--cs-white);
+  line-height: 1.15;
+}
+.cs-pro .cs-hero__sub {
+  position: relative;
+  margin: 0 auto;
+  max-width: 620px;
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  color: rgba(255,255,255,.72);
 }
 
-.cs-hero{
-  position:relative;
-  min-height:520px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:100px 20px;
-  background:linear-gradient(135deg,var(--black),var(--dark));
+/* ── Info bar ─────────────────────────────────────────────────── */
+.cs-pro .cs-infobar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px 24px;
+  background: var(--cs-white);
+  border-bottom: 1px solid var(--cs-border);
+}
+.cs-pro .cs-infobar__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1 1 220px;
+  min-width: 200px;
+  max-width: 320px;
+  padding: 12px 16px;
+  border: 1px solid var(--cs-border);
+  border-radius: 10px;
+  background: var(--cs-white);
+  box-shadow: 0 4px 14px rgba(0,0,0,.05);
+  transition: border-color .25s, transform .25s;
+}
+.cs-pro .cs-infobar__item:hover {
+  border-color: var(--cs-red);
+  transform: translateY(-2px);
+}
+.cs-pro .cs-infobar__icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: rgba(233,0,4,.09);
+  color: var(--cs-red);
+  font-size: 1rem;
+}
+.cs-pro .cs-infobar__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--cs-muted);
+  margin-bottom: 2px;
+}
+.cs-pro .cs-infobar__value {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--cs-black);
 }
 
-.cs-hero h1{
-  position:relative;
-  font-size:clamp(1.8rem,4vw,3.2rem);
-  font-weight:900;
-  color:#fff;
-  max-width:900px;
-  line-height:1.2;
+/* ── Sections ─────────────────────────────────────────────────── */
+.cs-pro .cs-section {
+  width: 100%;
+  padding: 72px 24px;
+  background: var(--cs-white);
+}
+.cs-pro .cs-section--alt  { background: var(--cs-light); }
+.cs-pro .cs-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+.cs-pro .cs-section__eyebrow {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--cs-red);
+}
+.cs-pro .cs-section__title {
+  margin: 0 0 28px;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  font-weight: 800;
+  color: var(--cs-black);
+  line-height: 1.2;
+}
+.cs-pro .cs-section__title::after {
+  content: '';
+  display: block;
+  margin-top: 12px;
+  width: 48px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--cs-red);
 }
 
-.hero-metrics{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:20px;
-  margin-top:32px;
+/* ── Cards ────────────────────────────────────────────────────── */
+.cs-pro .cs-grid {
+  display: grid;
+  gap: 20px;
+  margin-top: 8px;
+}
+.cs-pro .cs-grid--2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.cs-pro .cs-grid--3 { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+
+.cs-pro .cs-card {
+  padding: 26px;
+  border: 1px solid var(--cs-border);
+  border-radius: 14px;
+  background: var(--cs-white);
+  box-shadow: 0 8px 24px rgba(0,0,0,.05);
+  transition: border-color .25s, transform .3s, box-shadow .3s;
+}
+.cs-pro .cs-card:hover {
+  border-color: var(--cs-red);
+  transform: translateY(-5px);
+  box-shadow: 0 16px 40px rgba(233,0,4,.12);
+}
+.cs-pro .cs-card h4 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--cs-black);
+}
+.cs-pro .cs-card p {
+  margin: 0;
+  font-size: 0.93rem;
+  color: var(--cs-muted);
+  line-height: 1.7;
+}
+.cs-pro .cs-card--challenge {
+  border-top: 3px solid var(--cs-red);
+}
+.cs-pro .cs-card--solution {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.cs-pro .cs-card__icon {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--cs-red), var(--cs-dark));
+  color: var(--cs-white);
+  font-size: 0.9rem;
 }
 
-.metric{
-  min-width:160px;
-  padding:20px 22px;
-  background:rgba(255,255,255,0.1);
-  border:1px solid rgba(255,255,255,0.18);
-  border-radius:14px;
-  color:#fff;
-  text-align:center;
+/* ── Prose ────────────────────────────────────────────────────── */
+.cs-pro .cs-prose {
+  color: var(--cs-muted);
+  line-height: 1.85;
+  max-width: 840px;
+  margin-bottom: 16px;
+}
+.cs-pro .cs-prose ul {
+  padding-left: 22px;
+  margin: 0;
+}
+.cs-pro .cs-prose li { margin-bottom: 8px; }
+
+/* ── Visual band ──────────────────────────────────────────────── */
+.cs-pro .cs-band {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 240px;
+  padding: 60px 24px;
+  position: relative;
+  background: var(--cs-black);
+  overflow: hidden;
+}
+.cs-pro .cs-band::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(233,0,4,.25), transparent 60%);
+  pointer-events: none;
+}
+.cs-pro .cs-band__inner   { position: relative; z-index: 1; }
+.cs-pro .cs-band__title {
+  margin: 0 0 12px;
+  font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+  font-weight: 800;
+  color: var(--cs-white);
+}
+.cs-pro .cs-band__sub {
+  color: rgba(255,255,255,.68);
+  font-size: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.cs-pro .cs-tech-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 20px;
+}
+.cs-pro .cs-chip {
+  padding: 6px 16px;
+  border: 1px solid rgba(233,0,4,.5);
+  border-radius: 999px;
+  color: var(--cs-red);
+  background: rgba(233,0,4,.07);
+  font-size: 0.82rem;
+  font-weight: 600;
 }
 
-.metric-number{
-  display:block;
-  font-size:2rem;
-  font-weight:900;
-  margin-bottom:8px;
+/* ── Conclusion ───────────────────────────────────────────────── */
+.cs-pro .cs-conclusion {
+  padding: 72px 24px;
+  background: var(--cs-white);
+  text-align: center;
+}
+.cs-pro .cs-conclusion__icon {
+  font-size: 2.6rem;
+  color: var(--cs-red);
+  margin-bottom: 18px;
+  display: block;
+}
+.cs-pro .cs-conclusion__title {
+  margin: 0 0 18px;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 800;
+  color: var(--cs-black);
+}
+.cs-pro .cs-conclusion__text {
+  max-width: 720px;
+  margin: 0 auto;
+  color: var(--cs-muted);
+  line-height: 1.85;
 }
 
-.metric-label{
-  font-size:0.95rem;
-  letter-spacing:0.08em;
-  color:rgba(255,255,255,0.78);
-}
-
-.challenge-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:24px;
-  margin:32px 0;
-}
-
-.challenge-item,
-.tech-item,
-.feature-item,
-.metric-card,
-.benefit-category,
-.testimonial{
-  border-radius:16px;
-  background:#fff;
-  border:1px solid var(--border);
-  box-shadow:0 12px 30px rgba(0,0,0,0.06);
-}
-
-.challenge-item{
-  padding:26px;
-  text-align:left;
-}
-
-.challenge-item i{
-  font-size:2rem;
-  color:var(--primary);
-  margin-bottom:18px;
-}
-
-.challenge-item h4{
-  font-size:1.1rem;
-  margin-bottom:12px;
-}
-
-.challenge-item p{
-  color:var(--muted);
-  line-height:1.7;
-}
-
-.impact-stats{
-  background:linear-gradient(135deg,#f8f9fa,#e9ecef);
-  padding:28px;
-  border-radius:16px;
-  margin-top:32px;
-}
-
-.impact-stats h3{
-  margin-bottom:18px;
-}
-
-.impact-stats ul{
-  list-style:none;
-  margin:0;
-  padding:0;
-}
-
-.impact-stats li{
-  padding:12px 0;
-  border-bottom:1px solid rgba(234,234,234,0.9);
-  color:var(--text);
-}
-
-.impact-stats li:last-child{
-  border-bottom:none;
-}
-
-.tech-stack,
-.results-metrics,
-.benefits-grid,
-.steps-grid{
-  display:grid;
-  gap:20px;
-}
-
-.step,
-.metric-card,
-.benefit-category,
-.feature-item,
-.tech-item{
-  padding:24px;
-}
-
-.results-metrics{
-  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
-}
-
-.metric-card{
-  background:#fff;
-}
-
-.metric-value{
-  font-size:2rem;
-  font-weight:900;
-  color:var(--primary);
-  margin-bottom:10px;
-}
-
-.metric-desc{
-  font-weight:700;
-  margin-bottom:6px;
-}
-
-.metric-change{
-  color:var(--muted);
-  font-size:0.95rem;
-}
-
-.benefits-grid{
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-}
-
-.benefit-category h3{
-  margin-bottom:16px;
-}
-
-.benefit-category ul{
-  list-style:none;
-  padding:0;
-}
-
-.benefit-category li{
-  margin-bottom:10px;
-  color:var(--muted);
-}
-
-.solution-highlights,
-.steps-grid,
-.tech-stack {
-  display:grid;
-  gap:20px;
-}
-
-.solution-highlights{
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-}
-
-.highlight-item{
-  padding:24px;
-  text-align:left;
-}
-
-.step-number{
-  width:42px;
-  height:42px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:50%;
-  background:var(--primary);
-  color:#fff;
-  font-weight:900;
-  margin-bottom:14px;
-}
-
-.testimonial{
-  padding:32px;
-}
-
-.testimonial blockquote{
-  font-size:1rem;
-  color:var(--text);
-  line-height:1.8;
-  margin:0 0 18px;
-}
-
-.testimonial cite{
-  display:block;
-  color:var(--muted);
-  font-size:0.95rem;
-}
-
-.tech-badges{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  justify-content:center;
-  margin-top:20px;
-}
-
-.badge{
-  display:inline-flex;
-  padding:8px 14px;
-  background:rgba(233,0,4,0.08);
-  border-radius:999px;
-  color:var(--primary);
-  font-size:0.85rem;
-}
-
-@media (max-width:768px){
-  .hero-metrics,
-  .challenge-grid,
-  .results-metrics,
-  .benefits-grid,
-  .steps-grid,
-  .tech-stack {
-    grid-template-columns:1fr;
-    display:block;
-  }
-}
-
-.cs-hero-badge{
-  position:relative;
-  margin-bottom:18px;
-  padding:6px 16px;
-  border-radius:50px;
-  border:1px solid var(--primary);
-  color:var(--primary);
-  background:rgba(233,0,4,0.08);
-  font-size:12px;
-  letter-spacing:2px;
-  text-transform:uppercase;
-}
-
-.cs-infobar{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:14px;
-  padding:18px 20px;
-  background:#fff;
-  border-bottom:1px solid var(--border);
-}
-
-.cs-infobar-item{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:10px 14px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:#fff;
-  box-shadow:0 6px 20px rgba(0,0,0,0.04);
-}
-
-.cs-infobar-item i{
-  width:38px;
-  height:38px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:rgba(233,0,4,0.1);
-  color:var(--primary);
-  border-radius:10px;
-}
-
-.cs-section{
-  width:100%;
-  padding:80px 20px;
-  background:#fff;
-}
-
-.cs-section.alt{
-  background:#f8f9fc;
-}
-
-.section-inner{
-  max-width:1200px;
-  margin:auto;
-  padding:0 20px;
-}
-
-.cs-section h2{
-  font-size:clamp(1.4rem,3vw,2rem);
-  font-weight:900;
-  margin-bottom:20px;
-}
-
-.cs-section h2::after{
-  content:'';
-  width:60px;
-  height:4px;
-  background:var(--primary);
-  display:block;
-  margin-top:10px;
-  border-radius:2px;
-}
-
-.cs-visual{
-  width:100%;
-  height:300px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  position:relative;
-  background:linear-gradient(135deg,var(--black),var(--dark));
-}
-
-.cs-conclusion{
-  width:100%;
-  padding:80px 20px;
-  background:#fff;
-  text-align:center;
-}
-
-.big-icon{
-  font-size:3rem !important;
-  color:var(--primary);
-  margin-bottom:16px;
-}
-
-@media (max-width:768px){
-  .cs-section{
-    padding:40px 16px;
-  }
-  .cs-conclusion{
-    padding:40px 16px;
-  }
+/* ── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .cs-pro .cs-hero        { padding: 64px 16px 56px; }
+  .cs-pro .cs-section     { padding: 48px 16px; }
+  .cs-pro .cs-conclusion  { padding: 48px 16px; }
+  .cs-pro .cs-infobar     { overflow-x: auto; flex-wrap: nowrap; justify-content: flex-start; }
+  .cs-pro .cs-grid--2,
+  .cs-pro .cs-grid--3     { grid-template-columns: 1fr; }
 }
 </style>
-<body>
+
 <section class="cs-pro">
 
+  <!-- HERO -->
   <div class="cs-hero">
-    <span class="cs-hero-badge"><i class="fa fa-industry"></i> &nbsp; Case Study</span>
-    <h1>MPS - Manufacturing Production System</h1>
-    <p>Comprehensive enterprise manufacturing, distribution, and activation orchestration</p>
-    <div class="hero-metrics">
-      <div class="metric">
-        <span class="metric-number">95%</span>
-        <span class="metric-label">Quality Accuracy</span>
-      </div>
-      <div class="metric">
-        <span class="metric-number">4x</span>
-        <span class="metric-label">Faster Production Visibility</span>
-      </div>
-      <div class="metric">
-        <span class="metric-number">100%</span>
-        <span class="metric-label">Traceability</span>
-      </div>
-    </div>
+    <span class="cs-hero__badge">
+      <i class="fa-brands fa-python"></i>&nbsp; Case Study
+    </span>
+    <h1 class="cs-hero__title">SmallHD: Netsuite data search from backup transactions as the</h1>
+    <p class="cs-hero__sub">How Byteful helped SmallHD solve a critical business challenge using python, (numpy, pandas) are majorly involved.</p>
   </div>
 
+  <!-- INFO BAR -->
   <div class="cs-infobar">
-    <div class="cs-infobar-item">
-      <i class="fa fa-building"></i>
-      <div><strong>Client</strong><br><span>US Manufacturing Enterprise</span></div>
-    </div>
-    <div class="cs-infobar-item">
-      <i class="fa fa-user"></i>
-      <div><strong>Developer</strong><br><span>Kyra Technologies Team</span></div>
-    </div>
-    <div class="cs-infobar-item">
-      <i class="fa-solid fa-layer-group"></i>
-      <div><strong>Tech Stack</strong><br><span>NetSuite, MPS, Python, React, Node.js</span></div>
-    </div>
-    <div class="cs-infobar-item">
-      <i class="fa fa-server"></i>
-      <div><strong>Status</strong><br><span>Published</span></div>
-    </div>
-  </div>
-
-  <div class="cs-section"><div class="section-inner">
-    <h2>The Challenge</h2>
-    <p>The client was struggling with a highly fragmented manufacturing ecosystem that lacked end-to-end visibility. Production workflows, label generation, component verification, and activation tracking were handled in siloed processes across multiple teams.</p>
-
-    <div class="challenge-grid">
-      <div class="challenge-item">
-        <i class="fa fa-search"></i>
-        <h4>Poor Visibility</h4>
-        <p>Production and distribution data were scattered across systems, preventing real-time decision-making.</p>
-      </div>
-      <div class="challenge-item">
-        <i class="fa fa-exclamation-triangle"></i>
-        <h4>Defect Risk</h4>
-        <p>Defective or unauthorized components were not being flagged quickly enough, creating quality and compliance issues.</p>
-      </div>
-      <div class="challenge-item">
-        <i class="fa fa-file-alt"></i>
-        <h4>Manual Activation</h4>
-        <p>Activation and licensing workflows required manual intervention, slowing time to market.</p>
-      </div>
-      <div class="challenge-item">
-        <i class="fa fa-truck"></i>
-        <h4>Distribution Complexity</h4>
-        <p>Coordinating freight, warehouse, and carrier operations was inefficient and error-prone.</p>
+    <div class="cs-infobar__item">
+      <div class="cs-infobar__icon"><i class="fa-solid fa-building"></i></div>
+      <div>
+        <div class="cs-infobar__label">Client</div>
+        <div class="cs-infobar__value">SmallHD</div>
       </div>
     </div>
-
-    <div class="impact-stats">
-      <h3>Business Impact Before Transformation:</h3>
-      <ul>
-        <li><strong>35%</strong> increase in product delays due to poor workflow visibility</li>
-        <li><strong>20%</strong> defect rate before root cause registration</li>
-        <li><strong>24 hours</strong> average time to identify production exceptions</li>
-        <li><strong>Multiple manual approvals</strong> across more than 5 teams</li>
-      </ul>
-    </div>
-  </div>
-  </div>
-
-  <div class="cs-section alt"><div class="section-inner">
-    <h2>The Solution</h2>
-    <p>Kyra Technologies delivered a unified manufacturing production system built on NetSuite and MPS. The solution provided real-time process orchestration, component tracking, licensing workflows, and production activation control.</p>
-
-    <div class="solution-overview">
-      <h3>Technical Architecture</h3>
-      <div class="tech-stack">
-        <div class="tech-item">
-          <i class="fa fa-cogs"></i>
-          <h4>Production Orchestration</h4>
-          <p>Managed complex manufacturing sequences, component approvals, and activation checkpoints.</p>
-        </div>
-        <div class="tech-item">
-          <i class="fa fa-server"></i>
-          <h4>NetSuite Integration</h4>
-          <p>Connected ERP, inventory, and order data for seamless manufacturing and distribution workflows.</p>
-        </div>
-        <div class="tech-item">
-          <i class="fa fa-lock"></i>
-          <h4>Secure Data Flow</h4>
-          <p>Encrypted transactional data and audit trails ensured compliance across the supply chain.</p>
-        </div>
+    <div class="cs-infobar__item">
+      <div class="cs-infobar__icon"><i class="fa-solid fa-user-tie"></i></div>
+      <div>
+        <div class="cs-infobar__label">Developer</div>
+        <div class="cs-infobar__value">Eswar</div>
       </div>
     </div>
-
-    <div class="implementation-steps">
-      <h3>Implementation Process</h3>
-      <div class="steps-grid">
-        <div class="step">
-          <div class="step-number">1</div>
-          <h4>Process Discovery</h4>
-          <p>Mapped end-to-end manufacturing, packaging, and activation workflows.</p>
-        </div>
-        <div class="step">
-          <div class="step-number">2</div>
-          <h4>System Design</h4>
-          <p>Designed integrated workflows for production, packaging, and distribution coordination.</p>
-        </div>
-        <div class="step">
-          <div class="step-number">3</div>
-          <h4>Automation Implementation</h4>
-          <p>Built automatic tracking, verification, and approval sequences within MPS.</p>
-        </div>
-        <div class="step">
-          <div class="step-number">4</div>
-          <h4>Validation & Training</h4>
-          <p>Tested workflows with live product data and trained the operations team.</p>
-        </div>
-        <div class="step">
-          <div class="step-number">5</div>
-          <h4>Deployment & Optimization</h4>
-          <p>Launched in production and refined performance with real-time analytics.</p>
-        </div>
+    <div class="cs-infobar__item">
+      <div class="cs-infobar__icon"><i class="fa-brands fa-python"></i></div>
+      <div>
+        <div class="cs-infobar__label">Tech Stack</div>
+        <div class="cs-infobar__value">python, (numpy, pandas) are majorly involved</div>
       </div>
     </div>
-
-    <div class="key-features">
-      <h3>Key Features Delivered</h3>
-      <div class="features-grid">
-        <div class="feature-item">
-          <i class="fa fa-map-marker-alt"></i>
-          <div>
-            <h4>Serial Number Traceability</h4>
-            <p>Track each product from component assembly to final delivery.</p>
-          </div>
-        </div>
-        <div class="feature-item">
-          <i class="fa fa-clipboard-check"></i>
-          <div>
-            <h4>Activation Workflows</h4>
-            <p>Automated verification and activation for licensed products.</p>
-          </div>
-        </div>
-        <div class="feature-item">
-          <i class="fa fa-truck-loading"></i>
-          <div>
-            <h4>Distribution Coordination</h4>
-            <p>Integrated freight, warehouse, and carrier operations for faster delivery.</p>
-          </div>
-        </div>
-        <div class="feature-item">
-          <i class="fa fa-chart-pie"></i>
-          <div>
-            <h4>Operational Analytics</h4>
-            <p>Real-time dashboards for production KPIs and defect tracking.</p>
-          </div>
-        </div>
+    <div class="cs-infobar__item">
+      <div class="cs-infobar__icon"><i class="fa-solid fa-circle-check"></i></div>
+      <div>
+        <div class="cs-infobar__label">Status</div>
+        <div class="cs-infobar__value">Published</div>
       </div>
     </div>
   </div>
-  </div>
 
-  <div class="cs-section"><div class="section-inner">
-    <h2>Results & Business Impact</h2>
+  <div class="cs-section"><div class="cs-inner"><span class="cs-section__eyebrow">Overview</span><h2 class="cs-section__title">Background</h2><p class="cs-prose">Background
+In a data-driven world, organizations often deal with large volumes of data stored in CSV (Comma-Separated Values) files. These files can contain critical information that needs to be accessed, filtered, and presented in a user-friendly manner. This case study explores the development of a web application designed to manage and search through CSV files, enabling users to extract meaningful insights from their data.</p>
+<p class="cs-prose">Use Case Overview
+The primary goal of the application is to allow users to search for specific serial numbers within a set of CSV files and retrieve associated unique identifiers. The application also provides the ability to view detailed reports based on these unique identifiers. This functionality is particularly useful for organizations that need to track transactions, manage inventory, or analyze customer data.</p>
+<p class="cs-prose">Application Components
+CSV Handler Module: This module is responsible for reading, filtering, and processing CSV files. It includes functions to:</p></div></div>
 
-    <div class="results-metrics">
-      <div class="metric-card">
-        <div class="metric-value">95%</div>
-        <div class="metric-desc">Production Accuracy</div>
-        <div class="metric-change">Improved traceability</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-value">4x</div>
-        <div class="metric-desc">Faster Visibility</div>
-        <div class="metric-change">Real-time insights</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-value">75%</div>
-        <div class="metric-desc">Defect Reduction</div>
-        <div class="metric-change">Fewer production failures</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-value">$1.2M</div>
-        <div class="metric-desc">Annual Savings</div>
-        <div class="metric-change">Reduced operational costs</div>
-      </div>
-    </div>
-
-    <div class="benefits-grid">
-      <div class="benefit-category">
-        <h3><i class="fa fa-check-circle"></i> Quality & Compliance</h3>
-        <ul>
-          <li>Immediate defect detection and reporting</li>
-          <li>End-to-end traceability for audits</li>
-          <li>Automated compliance workflows</li>
-          <li>Improved product quality</li>
-        </ul>
-      </div>
-      <div class="benefit-category">
-        <h3><i class="fa fa-cogs"></i> Operational Efficiency</h3>
-        <ul>
-          <li>Automated approval and activation pipelines</li>
-          <li>Integrated manufacturing and distribution</li>
-          <li>Reduced manual handling and errors</li>
-          <li>Faster decision-making with real-time data</li>
-        </ul>
-      </div>
-      <div class="benefit-category">
-        <h3><i class="fa fa-chart-line"></i> Business Growth</h3>
-        <ul>
-          <li>Scalable production management platform</li>
-          <li>Faster time-to-market for new products</li>
-          <li>Greater visibility across the supply chain</li>
-          <li>Stronger partner and brand confidence</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="testimonial">
-      <blockquote>
-        "This integrated MPS platform gave us the production visibility and control we desperately needed. We can now launch products faster, track every item in the supply chain, and resolve quality issues before they impact customers."
-      </blockquote>
-      <cite>— Operations Director, US Manufacturing Enterprise</cite>
+  <!-- THE CHALLENGE -->
+  <div class="cs-section cs-section--alt">
+    <div class="cs-inner">
+      <span class="cs-section__eyebrow">The Problem</span>
+      <h2 class="cs-section__title">The Challenge</h2>
+      <p class="cs-prose">Netsuite data search from backup transactions as the huge data and expected wait time made generic search impractical</p>
     </div>
   </div>
-  </div>
 
-  <div class="cs-visual"><div class="section-inner">
-    <div class="cs-visual-content">
-      <h3><i class="fa fa-network-wired"></i> &nbsp; Modern Manufacturing Platform</h3>
-      <p>Powered by NetSuite, MPS, and a modern web architecture — delivering reliable, traceable manufacturing operations.</p>
-      <div class="tech-badges">
-        <span class="badge">NetSuite</span>
-        <span class="badge">MPS</span>
-        <span class="badge">Python</span>
-        <span class="badge">React</span>
-        <span class="badge">Node.js</span>
+  <!-- VISUAL BAND -->
+  <div class="cs-band">
+    <div class="cs-band__inner">
+      <h3 class="cs-band__title">
+        <i class="fa-solid fa-gears"></i>&nbsp; Built on Modern Technology
+      </h3>
+      <p class="cs-band__sub">
+        Powered by python, (numpy, pandas) are majorly involved — engineered for reliability and scale.
+      </p>
+      <div class="cs-tech-chips">
+        <span class="cs-chip">python</span>
+<span class="cs-chip">(numpy</span>
+<span class="cs-chip">pandas) are majorly involved</span>
       </div>
     </div>
   </div>
-  </div>
 
-  <div class="cs-conclusion"><div class="section-inner">
-    <i class="fa fa-trophy big-icon"></i>
-    <h2>Conclusion</h2>
-    <p>
-      Kyra Technologies delivered a market-ready MPS solution that transformed the client's production and distribution operations. By unifying manufacturing, activation, and quality-control workflows, the solution improved visibility, reduced defects, and created a scalable foundation for future business growth.
-    </p>
-    <div class="key-achievements">
-      <div class="achievement">
-        <i class="fa fa-check-circle"></i>
-        <span>End-to-end traceability across production and distribution</span>
-      </div>
-      <div class="achievement">
-        <i class="fa fa-check-circle"></i>
-        <span>Automated activation workflows for licensed products</span>
-      </div>
-      <div class="achievement">
-        <i class="fa fa-check-circle"></i>
-        <span>Operational dashboards for proactive decision-making</span>
-      </div>
-      <div class="achievement">
-        <i class="fa fa-check-circle"></i>
-        <span>Scalable architecture designed for global manufacturing</span>
-      </div>
+  <!-- THE SOLUTION -->
+  <div class="cs-section">
+    <div class="cs-inner">
+      <span class="cs-section__eyebrow">Our Approach</span>
+      <h2 class="cs-section__title">The Solution</h2>
+      <ul class="cs-prose"><li>The requirement was to make the data searchable as this is a backup data was close to 20GB of memory that made regular search approach impractical for the expected wait time.</li>
+<li>the process is initiaed thorugh a serial search that extracts all the relevent unique id's that gets the required data thorugh row global search</li>
+<li>To make it optimal the major factors that support are parallel processing and chuned data extraction and reuniting</li></ul>
     </div>
   </div>
+
+  <!-- CONCLUSION -->
+  <div class="cs-conclusion">
+    <div class="cs-inner">
+      <i class="fa-solid fa-trophy cs-conclusion__icon"></i>
+      <h2 class="cs-conclusion__title">Outcome</h2>
+      <p class="cs-conclusion__text">By partnering with Byteful, SmallHD transformed their operations using python, (numpy, pandas) are majorly involved. • The requirement was to make the data searchable as this is a backup data was close to 20GB of memory that made regular. The result was a scalable, reliable system that reduced manual overhead and delivered measurable business value.</p>
+    </div>
   </div>
 
 </section>
+<!-- === WORDPRESS PASTE END === -->
 
-</body>
 </html>
