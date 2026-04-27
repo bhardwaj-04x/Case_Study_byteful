@@ -1,0 +1,58 @@
+Case Studies
+Let's take a tour of our work.
+In our Client success, we are proud to say that over half a decade we assisted by building IT Systems for our clients to propel their business forward.
+Here it is:
+MPS
+Every enterprise survives on goods and they need to be produced. Once a product is manufactured that has to be sent to the consumer. It seems very simple but an enterprise cannot do it alone. The whole system needs  production, printing, contract repairers, freight forwarder services, distribution centres, carriers, customer services, international procurements, and so on.
+Challenges for client
+Giving an answer to this Kyra Technologies assists our client with a system by providing the same on web portals.
+We started our work remotely with a US based client. They wanted to work on credentials, transaction search with serial numbers of their products and their location. However the client was facing disruptions to manufacture of certain products which will be provided to consumers in the US. In the meantime from production to label the production and components of a particular product and all the services provided were lacking. In production itself if a component is defective or damaged where it should be reported, either back to the brand or kept in the warehouse or with the manufacturer. The whole system was very lengthy and to overcome that Kyra technologies came into picture.
+Solution Overview
+Giving a multi-level solution to the whole system Kyra Technologies using Netsuite and MPS. We have produced systems for their clients with the collective effort of our developers. We have built systems where they can track the producers. We created a strategy where clients can analyze and measure all the processes of its production.This process, where one checks the production of its product and its components and verifies them. Once the production is done it's good to go for activation.
+If not, there will be a failure pop up in production. It can be due to defective raw material or maybe a vendor is selling an unauthorised product. So, this system makes it very easy for real time data based manufacturers.
+Printing
+Challenges for client
+Once a product is ready it will go to market or on e-commerce so each and every product should be labeled. A labeled product plays a vital role in its increased demand and tells where its quality stands. Labelling a product in bulk is not child play. A label works as a communicator between the manufacturer and the consumer.
+Solution Overview
+Labeling a product will be an authenticity about its brand, quality and a displayed version about all the details of the product. So our developers create systems where clients can be given unique labels and that are labeled wisely and flawlessly. The beauty of this system is it can print labels hassle free as well as in bulk. These prints are done by a zebra printer.
+
+
+
+Licensing
+Challenges for client
+Licensing is a software item which prevents replicated software. It needs to be activated. A license validation is required for the software which should be done by the unique serial number and is used to generate a unique installation ID.
+Solution Overview
+An item which is sold in the store needs to be activated. As purchase happens a unique link will be generated. This unique activation link will be valid to access that particular item. Once the item is activated another unique code will appear which will be used for software activation. This unique id should be used for a product which remains the same throughout the life of the product. It prevents the license from being used again and again. Same way the licence can possibly be deactivated for the particular item. The use of this system is applicable in case of replacement or any kind of repairs required for the product.
+Download Portal
+Challenges for client
+To make the user experience better software updates are available.  How to access those updates? Where can these updates be found?
+Solution Overview
+Our developers created a portal where the softwares updates for all the manufacturer products can be downloaded.
+
+Activation App
+Challenges for client
+A product is manufactured and to validate that production, A product needs warranty. Warranty is a legal boundation within consumer and manufacturer. Warranty sets an expectation that a particular product is free from defects. So keeping in mind that all the products purchased long ago from the manufacturer are under warranty, how to know whether that product is under warranty or not.
+Solution Overview
+Activation app is used to catch if the product is under warranty or not. If it is under warranty the process will go beyond and ask for the registration. Once registration is done if a repair or replacement whatsoever can be done with the product.
+If it is not warranty then it will direct you to the login page and will not move further.
+
+
+CRC Centre
+Challenges for client
+Any enterprise who is producing or manufacturing needs, A partner. “A partner” can be any external organization that plays an integral role or may be outside the facility in the enterprise and whose business fortune depends wholly or partially on the success of the enterprise. So a system is required to manage these partners. These partners will assist them for the repairs of the product for eligible buyers.
+Moving forward, how to keep track of these partners/repairers? How to get the details of the product which needs to be repaired, who will repair it? How to get approval from a brand? Not to mention that there are always exceptions like if the product is not under warranty but the company believes it is in the best interest of the relationship to cover the repair under warranty. What would be the process?
+Solution Overview
+Providing a solution to something which is done manually earlier. A system is provided for repairs where availability of product and its components can be seen in a specific area and the repairer will cater the parts lists to those products. The system will be collecting product details as well as consumer details. To assist our client an ERP solution is provided where the repairs system is for the repairs of products outside the facility for partners that can be done on the basis of warranty of product. A warranty can be checked via Activation application, if it is not validated then a memo will be sent to the consumer for the same.
+Likewise another system is created if the repair can be done inside the facility. In other words every company has their local repairs which can be known as Dealer level Repair. They have their own repairing system which is built on salesforce. It needs to keep a check on repairs. Either the product can be repaired in the centre or can be sent back to the manufacturer or consumer. A mail notification should go in both scenarios. The app also allows the dealer and consumer to know about if any freight charges or labour charges are required or not. If any kind of payment is required against repair then the confirmation should be sent to the consumer. In case of any errors or failure of payment the email needs to clearly communicate so that the customer can attempt again. Once repair is done notification of shipment and tracking information will be sent to the customer.
+
+
+Partner Portal
+
+Kyra Technologies provides B2B solutions for websites to grow their business. We provide an online environment which gives you a wide engagement in commerce.
+
+NCRR
+North California Railroad Company / A private corporation manages the 317 mile rail corridor.
+Challenges for Client
+NCRR requires a utility occupancy portal where customers can submit their details by signing up themselves. They could submit their details as per their type of installation required and verify their purpose of installation. If they want to install any kind of pipeline or wireline which comes under the NCRR corridor, they can process their application. The portal should verify the documentation, plan and profiles which is necessary. After the verification of all the necessary documents. The details should be cross checked and sent to the concerned department. Once the department receives all the documentation an agreement should process which requires license agreement and once verified with the applicant. The applicant could pay a fee digitally to execute the agreement.
+Solution Overview
+The client is provided a portal where applicant information will be collected.Applicant can sign up and fill all the structure like location, purpose, length, type of wiring, necessary drawings. The applicant needs to pay some amount which will go to another/concerned firm for reviewing the application. Once the all process is done correctly the customer will receive an email link and put them under review. If details are not verified then the applicant will be rejected and advised to fill in for missing or wrong information. Again the applicant puts in all the mandatory information then the application goes for feedback from the engineer. Once feedback is done the same will be communicated to the applicant and ask them to make necessary changes. The process will keep on repeating under review unless the application is complete or acceptable by the department.

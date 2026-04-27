@@ -1,0 +1,616 @@
+For Reviewers			For submitters
+Case Study ID	Rating	Comments	Story?	Problem	Solution	Developer	Customer	Platform
+10	Review		"Managing data across three separate databases—each handling similar functions like customer data, transactions, and inventory—presented a significant challenge for the company. Although these databases were structured in the same way, their distribution across different environments created fragmentation. This setup made it difficult to access and work with all the data as a unified dataset.
+
+Furthermore, performing CRUD (Create, Read, Update, Delete) operations across these databases required separate management and maintenance for each environment. This approach led to inefficiencies, slow operations, and a poor user experience, as every database required its own configuration and setup.
+
+To solve these issues, we introduced GraphQL, a modern query language that optimized CRUD operations across all three databases. By creating a single API endpoint, we enabled clients to request only the data they needed, eliminating the need to interact with each database individually. Through GraphQL resolvers, we routed queries to the correct database, streamlining data retrieval and CRUD operations.
+
+This solution provided a scalable and flexible framework, consolidating the data and making operations more efficient. While the setup required careful planning, it significantly simplified data management and reduced the complexity of working with multiple databases."	"The company struggled with managing data spread across three separate databases, all serving similar functions like managing customer data, transactions, and inventory. Despite having identical structures, the data was housed in different environments, creating several challenges:
+
+Fragmented Data: With data distributed across different environments, it was difficult to consolidate it into a unified dataset.
+
+Complex CRUD Operations: Managing CRUD operations across three databases was cumbersome. Each environment required separate handling, which resulted in delays and operational inefficiencies.
+
+Slow Processes: The complexity of interacting with multiple databases slowed down the system, making it harder to quickly access or update critical business data.
+
+Limited Scalability: As the company grew and data volumes increased, maintaining separate environments for each database became increasingly unmanageable, hindering the company's ability to scale effectively."	"To resolve these challenges, we implemented GraphQL as a centralized solution to manage interactions with all three databases. The key elements of the solution included:
+
+Unified API Endpoint: A single API endpoint was created to manage all interactions with the databases, simplifying data access and streamlining operations.
+
+Resolvers: Custom GraphQL resolvers were used to direct queries to the appropriate database, ensuring data consistency and integrity across all environments.
+
+Optimized Data Fetching: Clients could now request only the specific data they needed, reducing unnecessary data retrieval and improving system performance.
+
+Scalable Infrastructure: The solution was designed to scale with the company's expanding data requirements, offering flexibility for future growth without requiring major reconfigurations.
+
+Improved Efficiency: By using GraphQL to manage multiple databases, CRUD operations became more efficient, and the company gained better control over its data management processes"	Rahul verma	Creative Solutions	Hasura, EC2, Postgres
+6	Review		"From Hours of Manual Work to Full Automation:
+Managing customers, opportunities, agreements, deposits, invoices, and sales orders in NetSuite was a tedious, error-prone process, consuming 30–50 hours each month. Delays, mistakes, and inefficiencies slowed down operations.
+
+By integrating NetSuite into a utility portal, we fully automated these tasks, reducing manual work to zero. Accuracy improved, efficiency soared, and scalability became effortless. Now, teams focus on growth instead of repetitive admin work, turning a major bottleneck into a seamless, streamlined process.
+
+Technology didn’t just save time—it transformed our business."	Managing key business operations in NetSuite—such as creating customers, opportunities, agreements, deposits, invoices, and sales orders—was entirely manual. This process was not only time-consuming but also prone to human errors, leading to inefficiencies, delays, and inconsistencies in data management. Employees spent 30–50 hours per month on repetitive tasks, diverting valuable time from strategic initiatives. As the workload grew, scalability became a major concern, making it clear that a more efficient solution was needed.	"1. We integrated NetSuite into the utility portal, automating all critical business operations.
+2. This eliminated the need for manual data entry, reducing the workload from 30–50 hours to zero.
+3. The integration streamlined processes, making operations more efficient.
+4. Errors were minimized, significantly improving data accuracy.
+5. The system became scalable, and capable of handling growing business demands.
+6. Employees could now focus on higher-value tasks instead of repetitive manual work.
+7. Overall, this transformation ensured seamless operations and long-term business growth."	Gurudeep	North Carolina Railroad	NetSuite ERP/ Nodejs
+2	Publish	Though the initial design for webapp was done by me to show case the extracted data. lateron further ui enhancements and deployment was done by manoj.	"Background
+In a data-driven world, organizations often deal with large volumes of data stored in CSV (Comma-Separated Values) files. These files can contain critical information that needs to be accessed, filtered, and presented in a user-friendly manner. This case study explores the development of a web application designed to manage and search through CSV files, enabling users to extract meaningful insights from their data.
+
+Use Case Overview
+The primary goal of the application is to allow users to search for specific serial numbers within a set of CSV files and retrieve associated unique identifiers. The application also provides the ability to view detailed reports based on these unique identifiers. This functionality is particularly useful for organizations that need to track transactions, manage inventory, or analyze customer data.
+
+Application Components
+CSV Handler Module: This module is responsible for reading, filtering, and processing CSV files. It includes functions to:
+
+Load CSV files from a specified directory.
+Filter data based on user-defined criteria (e.g., serial numbers).
+Extract unique identifiers from the filtered data.
+Convert CSV data into HTML format for display in a web interface.
+Web Application (Flask): The web application serves as the user interface, allowing users to interact with the CSV data. It includes:
+
+A home page where users can input serial numbers to search.
+A results page that displays unique identifiers and detailed reports based on user selections.
+User Journey
+Accessing the Application: Users navigate to the home page of the application, where they are presented with a form to input a serial number.
+
+Searching for Serial Numbers: Upon submitting the form, the application processes the input serial number. The get_unique_ids function is called, which filters the relevant CSV files and retrieves unique identifiers associated with the serial number.
+
+Viewing Unique Identifiers: The application generates a dropdown list of unique identifiers based on the search results. Users can select an identifier from the dropdown menu.
+
+Retrieving Detailed Reports: When a user selects a unique identifier and submits the form, the application calls the get_data_by_unique_id function. This function retrieves detailed data from all relevant CSV files associated with the selected unique identifier and presents it in a structured HTML format.
+
+Displaying Results: The results are displayed on a new page, allowing users to view and analyze the data. The application formats the data using the PrettyTable library, ensuring it is easy to read and understand.
+
+Technical Implementation
+CSV File Handling: The application uses Python's built-in csv module to read and process CSV files. It filters data based on the last column (assumed to contain serial numbers) and extracts unique identifiers for further processing.
+
+Web Framework: Flask is used to create the web application, providing a simple and effective way to handle HTTP requests and render HTML templates.
+
+HTML Rendering: The application uses Jinja2 templating to dynamically generate HTML content based on user input and search results.
+
+Error Handling: The application includes basic error handling to manage unauthorized access and ensure that users receive appropriate feedback."	Netsuite data search from backup transactions as the huge data and expected wait time made generic search impractical	"• The requirement was to make the data searchable as this is a backup data was close to 20GB of memory that made regular search approach impractical for the expected wait time.
+• the process is initiaed thorugh a serial search that extracts all the relevent unique id's that gets the required data thorugh row global search
+• To make it optimal the major factors that support are parallel processing and chuned data extraction and reuniting"	Eswar	SmallHD	python, (numpy,pandas) are majorly involved
+9	Review		"Accelerating Progress: Transforming NCRR’s Application Process
+
+For years, the application process at NCRR was a major bottleneck, taking nearly a year to complete. This slow timeline not only delayed operations but also hindered economic development. Manual paperwork, lengthy approvals, and inefficient communication created frustration for applicants and administrators alike.
+
+To solve this, we developed a digital portal that streamlined the entire process. With dynamic forms, online document signatures via DocuSign, integrated online and offline payments, and a built-in chat system, applications could now move forward faster and more efficiently.
+
+The impact was immediate—application completion time dropped from a year to just 2-3 months. This transformation didn’t just speed up approvals; it enhanced efficiency, improved service delivery, and helped drive economic growth."	The application process at NCRR was highly inefficient, taking approximately one year to complete. Lengthy paperwork, manual approvals, and lack of streamlined communication led to frequent delays, making it difficult for applicants to navigate the process. These inefficiencies not only slowed down operations but also negatively impacted economic development, as businesses and projects had to wait extended periods for approvals. The need for a faster, more efficient, and user-friendly solution became clear.	"1. A digital portal was developed to automate and optimize the application process.
+2. Dynamic forms were introduced to enable applicants to submit information quickly and accurately.
+3. Online document signatures were integrated using DocuSign for secure and seamless digital signing.
+4. Payment flexibility was provided with both online and offline payment options.
+5. A built-in chat system was implemented to facilitate real-time communication between applicants and administrators.
+6. The approval process and document management were streamlined to reduce bottlenecks and improve efficiency.
+7. The application completion time was reduced from one year to just 2–3 months.
+8. Efficiency improved, the user experience was enhanced, and economic development accelerated."	Gurudeep	NCRR	React, Nodejs, MongoDB, Web Sockets, Docusign, Stripe
+7	Review		"Streamlining Customer Management:
+As the utility portal expanded, managing customers and their contacts became increasingly complex. Individuals associated with multiple companies required separate records, leading to data duplication, inefficiencies, and challenges in tracking relationships effectively. The growing client base only made these issues worse, slowing down operations and limiting scalability.
+
+To address this, we developed a custom CRM system, closely aligned with NetSuite’s CRM functionality. This upgrade allows a single user to manage multiple company associations seamlessly, centralizing contact management and eliminating redundancies.
+
+With this streamlined approach, users can now handle a larger number of clients effortlessly, improving efficiency, accuracy, and overall customer relationship management. What was once a frustrating process is now a seamless and scalable solution."	As the utility portal expanded and gained more clients, managing customer relationships became increasingly complex. Many individuals were associated with multiple companies, but the system required separate contact records for each association. This led to inefficiencies, data duplication, and difficulties in maintaining accurate customer information. As the client base grew, tracking interactions, managing relationships, and ensuring seamless communication became more challenging. The lack of a centralized system not only increased administrative workload but also limited scalability and operational efficiency.	"1. We developed a custom CRM system closely aligned with NetSuite's CRM functionality.
+2. The updated CRM enables a single user to manage multiple company associations seamlessly.
+3. Contact management is now centralized, eliminating data duplication and inefficiencies.
+4. Efficiency is enhanced by streamlining customer relationship management.
+5. Users can handle a larger number of clients effortlessly.
+6. Advanced capabilities provide better tracking and organization of customer relationships.
+7. The upgrade ensures a scalable and more efficient system for long-term growth."	Gurudeep	North Carolina Railroad	React, Nodejs, Postgres
+11	Review		"Use Case Overview
+
+As Salesforce organizations grow and accumulate more data, the need for faster, more efficient data processing becomes crucial. The solution was to implement Lightning Web Components (LWC) because they are lightweight, highly performant, and offer a better user experience. LWCs allow users to quickly retrieve related records on the same or different record pages, apply complex filters for reporting, and overcome the limitations of standard Salesforce processes.
+
+For example, adding products to an opportunity in Salesforce typically requires navigating through multiple screens, which is time-consuming and inefficient. By leveraging LWCs, this process can be streamlined into a single, seamless experience, significantly improving productivity and reducing user frustration.
+
+Solution Components
+
+Lightning Web Components (LWC):
+
+LWCs are lightweight and fast, making it easier to:
+Fetch and show related records on the same page.
+Apply filters for custom reports.
+Add products to opportunities without needing to switch between screens.
+
+Apex Batch Processing:
+
+Bulk Apex processes data in smaller groups (e.g., 100 records at a time) to avoid errors and system limits. This ensures data is handled smoothly, even in large amounts.
+
+User Journey
+
+Accessing Data:
+
+With LWCs, users can get related records from any page without having to navigate through multiple screens.
+
+Simplifying Product Addition to Opportunities:
+
+Instead of going through multiple screens to add products to opportunities, users can now do it directly on the same page, saving time.
+
+Efficient Data Handling:
+
+Bulk Apex processes large data sets in chunks, making sure everything runs smoothly without hitting system limits.
+
+Technical Implementation
+
+LWC:
+
+LWCs help display data in real-time and make actions like searching and filtering smoother. This helps speed up tasks like adding products to opportunities.
+
+Bulk Apex:
+
+Data is processed in groups to prevent system overload and keep the application responsive.
+
+Error Handling:
+
+The system notifies users of any errors, like incorrect data or access issues, to ensure a smooth experience."	Optimize large-scale data loading and display in Lightning Web Components (LWC) to ensure smooth on-screen rendering without excessive load times. This involves handling CRUD (Create, Read, Update, Delete) operations efficiently in Salesforce without causing server errors, CPU timeouts, or hitting platform governor limits. The goal is to balance user experience with backend performance, ensuring real-time data interaction and processing for large datasets without performance degradation.	"In a recent project, I focused on optimizing the loading and display of large data sets in Lightning Web Components (LWC) to improve performance and avoid browser issues like unresponsiveness and long load times.
+
+To achieve this, I implemented lazy loading within the component, which allowed data to load progressively instead of all at once. Depending on the screen size, we loaded 50 or 100 records at a time, and as the user scrolled, additional data was fetched seamlessly. This strategy significantly boosted performance, ensuring that the browser—whether Chrome or any other—remained responsive and didn’t freeze under the load of large data sets.
+
+We also used infinite scrolling, a technique where only the visible rows were rendered in the LWC table, and rows that moved out of view were dynamically removed from the DOM. This helped keep the DOM light, which contributed to smoother rendering. Additionally, I added debouncing for actions like searching, filtering, and updating records, which reduced the number of server calls and enhanced responsiveness during these operations.
+
+For managing large data sets and bulk operations like creating or updating records, I used a bulkified Apex class. By processing data in chunks of 100 records, we ensured that the system wouldn’t hit Salesforce governor limits or CPU timeouts. The process involved handling one chunk at a time, and only when the current chunk was completed did the next batch of 100 records get processed. This allowed for more controlled and efficient handling of large-scale data updates.
+
+Techniques used:
+
+Lazy loading
+Infinite scrolling
+Chunking data with promises
+Optimizing both JavaScript and Apex code
+Resources used:
+
+VS Code for development
+Salesforce platform for data management and backend processing"	Shashikant	Creative Solutions	"Salesforce as the platform
+Lightning Web Components (LWC) for the frontend
+Apex for server-side logic in Salesforce"
+	Review		"Our company deals with three different brand products, and managing customers data, orders and transactions across these brands in xTuple has become increasingly complex.The sales team struggled with tracking orders and customer interactions across different platforms, leading to inefficiencies and delays.
+
+We needed a way to sync and manage all brand-related sales data in one place. Without this, it was challenging to maintain accurate records, track sales performance, and provide seamless customer service
+
+To streamline operations ,we decided to migrate this data to Salesforce. This would allow better visibility, reporting, and management of sales activities while keeping all information synchronized between xTuple and Salesforce."	"Managing three different brand products in xTuple and
+tracking sales activities in Salesforce was a major
+challenge.Since orders, accounts, and contacts were
+maintained separately in xTuple, the sales team had
+difficulty retrieving accurate information in Salesforce.
+
+The challenge was to migrate and sync orders
+from xTuple to Salesforce while ensuring that
+they are correctly linked to the respective accounts,
+contacts,and order line items(Products) for all brands.
+
+Without proper synchronization, the sales team
+struggled to track transactions across brands.
+This lack of integration made it hard to manage
+customer relationships and sales insights effectively."	"To solve this, we implemented a structured data
+synchronization process using external IDs for
+accounts, contacts, orders, and order line items
+(Products).
+
+When syncing orders from xTuple to Salesforce,
+we fetch the corresponding account and contact
+based on the given brands external IDs and associate
+them with the orders.
+
+Similarly, orders also have external IDs,
+while syncing order line items, we fetch the related
+orders and add the respective products into them.
+
+This approach ensures that all data remains
+correctly mapped, eliminating inconsistencies and
+enabling seamless tracking of sales activities in
+Salesforce"	Pavan	Creative Solutions	"Salesforce(Apex), Postgresql,
+Skyvia"
+	Review		"Background:-
+Effective case management is essential for customer support teams to resolve issues promptly and maintain high customer satisfaction. However, when post-resolution processes like archiving and notifications are handled manually, they can lead to missed deadlines, inconsistent communication, and compliance risks.
+
+
+Use Case Overview:-
+Initially, Salesforce was set up to archive closed cases automatically after 45 days. However, no prior notification was sent to customers or internal stakeholders, leading to questions about transparency and sudden data inaccessibility. To address this, a more structured and communicative approach was needed—one that would notify stakeholders in advance before archiving..
+
+
+"	"Previously, Salesforce was set up to automatically archive cases 30 days after they were marked as Closed. However, this process had key issues:
+No prior notification was sent to customers or internal users before archiving.
+Cases were archived silently, leading to confusion and potential customer dissatisfaction.
+"	"Trigger Monitoring: When a case is marked Closed, a timer starts.
+30-Day Email Alert: After 30 days, an email is automatically sent to notify that the case will be archived in another 15 days.
+45-Day Archive & Lock:
+On Day 45, if the 30-day email was sent, the system:
+Archives the case (updates status or custom field).
+Locks the record to prevent any further edits.
+Fully Automated: Built using Flows and Scheduled Paths, requiring no manual intervention.
+This solution ensures that:
+Stakeholders are notified in advance of any archival.
+Archiving only happens after communication.
+Closed cases are locked, maintaining data integrity.
+Support agents are relieved from manual tracking tasks."	Pavan	Creative Solutions	Salesforce(Flow)
+	Review		"Use Case Overview
+In our Salesforce org, sales reps often fail to maintain their opportunity forecasts accurately, especially when receiving regular monthly orders from resellers. Ideally, reps should create opportunities in advance and link them to orders when they arrive. However, due to lack of discipline and process adherence, this was not being done consistently, leading to forecast inaccuracies.
+
+To address this, we designed an automated solution that detects orders and suggests opportunity matches based on predefined logic. If no opportunities exist, the system proactively creates generic forecast opportunities to maintain forecasting integrity.
+
+
+
+Solution Components
+Lightning Web Components (LWC)
+Opportunity Matching Viewer: A custom LWC was added to the order record page to display all open opportunities that closely match the order amount and account within a defined threshold.
+
+Suggested Match Action: A button within the LWC allows users to confirm a match. When clicked, the selected opportunity is updated to reflect the order details and linked to the order.
+
+Quick Create Component: If no opportunity exists, another LWC enables users to quickly create a new opportunity and link it to the current order directly from the order record page.
+
+Apex Trigger
+A trigger runs when an order is created. It fetches all open opportunities for the order’s account and evaluates matches based on criteria such as amount and close date proximity.
+
+A new custom object (suggested match record) is created to represent how closely an opportunity matches the order, which is displayed in the UI via LWC.
+
+Batch Apex (True-Up and Reduction Logic)
+A batch job runs on a regular basis (e.g., monthly) to create Generic Forecast Opportunities for sales reps who haven’t created any.
+
+These generic opportunities are linked to a generic account and generic product with the total expected forecasted amount.
+
+When a new order arrives and a real opportunity is created manually or via LWC, the system reduces the corresponding amount from the rep's generic opportunity, effectively maintaining accurate forecasting data.
+
+User Journey
+Step 1: Order Creation
+When an order is created, the system scans for related open opportunities and suggests a match.
+
+Step 2: Opportunity Matching
+On the order record page, the LWC shows all matching opportunities. Sales reps can manually confirm a match using a button.
+
+Step 3: Opportunity Creation
+If no opportunity exists, reps can create one using the “Create Opportunity” LWC, which auto-links the new record to the order.
+
+Step 4: True-Up Forecasting
+For reps who haven’t created opportunities, a batch process generates a forecast placeholder opportunity. When the rep eventually creates a real one, the system subtracts the order amount from the generic opportunity, ensuring the forecast remains balanced.
+
+Technical Implementation
+LWC: Enables real-time matching and opportunity creation from the order record page.
+
+Apex Trigger: Detects order creation and handles opportunity matching logic.
+
+Batch Apex: Creates generic opportunities in bulk and adjusts them based on future actions.
+
+Error Handling: All components include validation and error messages to notify users in case of issues, such as permission errors or missing data."	Automate true-up and reduction logic in Salesforce to handle unmaintained forecasts by sales reps who fail to create or link opportunities with incoming monthly orders. This involves detecting new orders, identifying or creating suitable opportunities, and updating forecasts automatically without relying on manual input. The system must efficiently manage data processing through triggers, LWCs, and batch jobs to ensure that each order is accurately tied to a forecasted opportunity—real or generic—while maintaining forecasting accuracy and avoiding data duplication, CPU timeouts, or governor limit issues.	"In a recent project, I addressed the issue of sales reps neglecting to maintain forecasts by automating true-up and reduction logic using Apex triggers, batch jobs, and Lightning Web Components (LWC).
+
+To solve this, I first created an Apex trigger that listens for newly created orders. When an order is created, the trigger fetches all open opportunities for the related account and checks for a match based on amount thresholds. I designed a matching algorithm that identifies the closest matching opportunity and stores it as a suggested record. This suggestion is then displayed on the order record page using a custom LWC component. The component provides reps with a button to confirm the match, which when clicked, updates the opportunity fields to reflect the order data.
+
+To handle cases where no opportunities exist, I developed another LWC that allows users to create a new opportunity directly from the order page. Once created, the new opportunity is automatically linked to the order.
+
+In parallel, I implemented a Batch Apex process that periodically creates “Generic Opportunities” for reps who fail to forecast. These use a generic account and product, and hold cumulative order amounts. When a new opportunity is eventually created and linked to an order, the order amount is deducted from the respective generic opportunity, effectively adjusting the forecast.
+
+This end-to-end system ensures every order impacts the forecast accurately—either via real or generic opportunities—without relying on manual rep intervention. It also prevents duplication and minimizes the risk of missing forecasts, maintaining system and business data integrity.
+
+Techniques used:
+
+Apex Trigger for real-time suggestion logic
+
+Lightning Web Components for UI and user interaction
+
+Batch Apex for background creation of generic opportunities
+
+Threshold-based matching logic
+
+Automatic adjustment of forecast through opportunity reduction
+
+Resources used:
+
+Salesforce platform for automation and data management
+
+VS Code for LWC and Apex development
+
+SOQL and DML best practices to prevent governor limits"	Shashikant	Creative Solutions	Salesforce as the platform, using Lightning Web Components (LWC) for the frontend and Apex for server-side logic. I implemented Apex triggers for initial logic execution and leveraged asynchronous batch Apex to automatically perform operations on a monthly or weekly basis
+	Review		"Use Case Overview
+In our Salesforce org, the standard lead conversion component posed usability issues. It always created a new Account and Contact even when one already existed, requiring users to manually search and match records. This caused duplication, inefficiency, and frustration during the lead conversion process.
+
+To streamline the workflow, we developed a custom Lead Conversion component that intelligently detects existing Accounts and Contacts based on the lead’s email and phone number. If a match is found, those records are reused; otherwise, new ones are created. The solution also guides users through opportunity creation with prefilled values to reduce manual input and improve accuracy.
+
+Solution Components
+
+Custom Screen
+Lead Conversion UI: A custom screen replaces the standard convert button. It checks for existing Account and Contact records using lead email and phone. If found, those records are reused. If not, it creates new ones.
+
+Opportunity Prefill: When the user clicks “New Opportunity,” the form auto-populates key fields like close date, owner, and department-specific values based on the current user’s role and team.
+
+User Control: Users can modify the prefilled values before saving if needed, offering flexibility.
+
+Invocable Method & Flow
+Lead Status Update Flow: Upon save, a Flow is triggered that calls an Invocable Apex Method. This method updates the lead status to “Converted,” links the selected or created Account and Contact to the new Opportunity, and closes the lead record.
+
+Error Handling: The solution includes validation messages to alert the user in cases where matching fails, or if required fields are missing during opportunity creation.
+
+User Journey
+
+Step 1: Lead Opened
+Sales rep opens the custom lead component instead of using the standard convert button.
+
+Step 2: Account/Contact Match
+The component searches for an existing Account and Contact using lead email and phone. If found, they're displayed; if not, new ones are created.
+
+Step 3: Opportunity Creation
+User clicks “New Opportunity” which launches a prefilled form. The rep can modify fields as needed.
+
+Step 4: Save & Convert
+On save, a Flow is triggered that marks the lead as converted and links all relevant records accordingly.
+
+Technical Implementation
+
+Flow Screen: Built the custom Lead Conversion UI with logic for detecting existing Account and Contact records.
+
+Apex (Invocable Method): Updates the Lead’s status and creates/links Opportunity, Account, and Contact as appropriate.
+
+Flow: Orchestrates the final step in lead conversion by calling the Invocable method and ensuring data is linked cleanly.
+
+Validation & Error Handling: User-friendly alerts and backend validations ensure data quality and prevent duplicates."	Automate and streamline the lead conversion process in Salesforce to eliminate inefficiencies and reduce data duplication caused by the standard lead conversion component, which always creates new Accounts and Contacts. The solution must intelligently identify existing records based on the lead’s email and phone, reuse them when available, and only create new records when necessary. Additionally, the system should simplify opportunity creation with prefilled values tailored to the user’s role or department. All conversions should close the lead and link associated records accurately using invocable Apex and Flows—ensuring a seamless, low-friction experience without violating governor limits or introducing data integrity issues.	"To solve the inefficiencies in lead conversion, I implemented a custom solution using a combination of Apex, Flows, and Invocable Methods.
+
+First, I replaced the standard lead conversion functionality with a custom Lightning component. This component checks for existing Account and Contact records using the lead’s email and phone number. If a match is found, those records are reused; otherwise, new ones are created—avoiding duplicates and streamlining the process.
+
+Next, I added functionality to launch a new opportunity creation form prefilled with values based on the user’s department, role, and historical input. This reduces manual effort while still allowing users to edit the details before saving.
+
+Upon clicking the save button, a Flow is triggered that calls an Invocable Apex Method. This method programmatically updates the Lead status to “Converted,” associates the correct Account and Contact to the newly created Opportunity, and closes the Lead.
+
+This solution ensures that the lead conversion process is user-friendly, eliminates unnecessary record duplication, and respects Salesforce governor limits through optimized SOQL, selective DML usage, and proper bulkification.
+
+Techniques Used:
+
+Flow screen for custom Lead Conversion UI
+
+Apex (Invocable Method) to handle conversion logic programmatically
+
+Flow to coordinate the conversion process and update record statuses
+
+Conditional matching logic using lead email and phone
+
+Prefilled opportunity creation for improved user experience
+
+Resources Used:
+
+Salesforce Platform (Leads, Accounts, Contacts, Opportunities)
+
+Apex And Flows automation and user interface
+
+VS Code for component and logic development
+
+SOQL and Apex best practices for efficiency and scale"	Shashikant	Creative Solutions	Salesforce as the platform, using Screen flow for the frontend and Apex for server-side logic.
+	Review		Our sales team uses Salesforce along with Pardot (now called Account Engagement) to manage leads and customer relationships. We noticed that sometimes Contacts with Pardot records were not owned by the correct sales reps. This caused confusion and delays in follow-ups, especially when the Contact's owner was not part of the Sales team, or when the Account owner was someone active in Sales.	"We found a specific issue:
+Some Contacts had related Pardot Prospect records (indicated by a non-empty Account Engagement Url field).
+Their Owner was either not from the Sales team or was inactive owner.
+Meanwhile, their Account Owner was an active Sales team member.
+Because of this mismatch, sales reps were missing important updates, and Contacts were not managed properly."	"To solve this, we created a Batch Apex class in Salesforce that runs through Contact records and checks for these conditions. If a Contact has a Pardot record and the current owner is not a Sales user (or is empty), and the related Account owner is an active Sales user, then we automatically update the Contact owner to match the Account owner.
+This automation helped:
+Keep ownership clean and aligned with the active sales team.
+Ensure that Contacts tied to marketing data were properly followed up by the right sales reps.
+Reduce manual reassignment work for admins."	Pavan	Creative Solution	Salesforce Batch Apex
+	Review		"In our customer support process, cases are often reviewed, resolved, and closed by support representatives. As a best practice, and to maintain data integrity, cases are locked after closure. Additionally, any case that remains closed for more than 45 days is automatically archived and locked, making it inaccessible for edits or updates.
+
+Historically, this locking mechanism was put in place to prevent unintentional modifications to finalized support records. However, over time, several operational challenges emerged due to this rigid locking structure."	"Once a case was locked—especially those automatically archived after 45 days—support representatives had no way to make corrections or updates to case details. However,in some cases often required occasional updates even after closure, including:
+
+Clarifying resolution details.
+Adding follow-up information requested by the customer.
+Correcting data entry errors discovered post-closure.
+Updating related fields necessary for reports, audits, or escalations.
+Because of the locking mechanism, support reps had to rely on developers to manually unlock the case via backend processes or Apex scripts. This process was:
+Time-consuming: Each unlock request could take hours or even days, depending on developer availability.
+Disruptive: Developers were pulled away from high-priority tasks to handle manual case unlocks.
+Inefficient: The support team couldn’t resolve simple issues autonomously, leading to delays in case corrections and customer follow-ups.
+
+"	"To address the challenge, we designed and deployed a feature enhancement: an “Unlock Case” button on the Case record page. Key elements of the solution include:
+
+Custom Button: A new button labeled “Unlock Case” was created using Salesforce configuration/custom development tools.
+
+Permission Control: The button is only visible and executable by users with the 'Support Lead' role /profile. This ensures that unlocking capability is limited to experienced personnel.
+
+Process Logic: When clicked, the button updates the case record to mark it as unlocked/closed, enabling edit access to relevant fields."	Pavan	Creative Solution	Salesforce apex class, flow, custom button
+	Review		"Use Case Overview
+In our Salesforce org, we initially used custom Flows to assign incoming Cases to agents. However, this approach lacked real-time queue management, could not count an agent’s current active cases accurately, and made it hard to balance workloads. It also failed to consider agent capacity, presence status, and live routing—leading to delays, manual reassignment, and inefficiencies in service delivery.
+
+To address these challenges, we implemented Salesforce Omni-Channel. This powerful native tool intelligently routes Cases to available agents based on capacity, skill, and availability, ensuring better workload distribution and a more responsive customer experience.
+
+Solution Components
+Omni-Channel Setup
+Routing Configuration: Created Routing Configurations to define how Cases are prioritized and routed (e.g., most urgent cases go first).
+
+Presence Statuses: Defined custom Presence Statuses like “Available – Cases,” “Break,” etc., to control when agents can receive new Cases.
+
+Service Channels: Configured the Case Object as a Service Channel, enabling it to be routed through Omni-Channel.
+
+Queues and Capacity Management
+Queues: Created specialized Case queues (e.g., Support L1, Support L2) aligned with departments or case types.
+
+Agent Capacity: Set up Agent Workload Rules based on open Cases or time allocation, ensuring agents are not overloaded.
+
+Routing Logic with Skills
+Skills-Based Routing: Defined Skills (e.g., Product A, Billing) and assigned them to both Cases and agents for accurate routing.
+
+Skill Requirements: Used Routing Rules to evaluate Case criteria (like product type or region) and assign the correct skill.
+
+User Journey
+Step 1: Case Created
+Customer submits a case via Web-to-Case, Email-to-Case, or manually by a rep.
+
+Step 2: Case Routed
+Omni-Channel routes the Case based on defined routing rules and agent availability.
+
+Step 3: Agent Accepts
+Agent with matching skillset and available capacity sees a notification and accepts the Case in real time.
+
+Step 4: Work in Progress
+Case is marked as “In Progress,” and the system updates the agent’s capacity. Others won’t receive new Cases until capacity is available."	"Before implementing Omni-Channel, case routing in our Salesforce org relied heavily on custom Flows and manual queue assignments. This approach introduced several limitations that affected both efficiency and user experience:
+
+No Real-Time Agent Load Tracking: Our Flows couldn’t accurately count how many active cases a user was already handling, leading to uneven workloads across the team.
+
+Manual Monitoring: Supervisors had to manually monitor queues and reassign cases when agents were overloaded or unavailable.
+
+Lack of Presence Awareness: The system had no way to detect whether an agent was online or in a state to accept new work.
+
+Delayed Response Times: Cases sat idle in queues until someone manually picked them up, increasing resolution time.
+
+Scaling Challenges: As volume grew, the flow logic became harder to maintain and failed to scale with team size or case complexity.
+
+Due to these issues, our support team faced:
+
+Longer wait times for customers due to slow and uneven case routing.
+
+Burnout among high-performing reps who consistently received more cases.
+
+Inefficient use of resources, with some agents idle while others were overwhelmed.
+
+Frequent bottlenecks in case handling and response SLAs.
+"	"To solve the inefficiencies in case routing and agent workload management, I implemented a robust Omni-Channel setup using Salesforce’s native routing engine, presence configuration, and service channels.
+
+First, I enabled Omni-Channel and defined Presence Configurations so agents could set themselves as available or unavailable based on their current capacity. This allowed the system to route cases only to users who were actively online and able to accept work.
+
+Next, I created Routing Configurations and Service Channels for the Case object. These configurations included priority levels, capacity units, and the type of work (Cases) to be routed in real-time. Agents were then mapped to queues based on their department, skills, and workload tolerance.
+
+I replaced the Flow-based routing logic with skill-based routing rules. Each Case was evaluated using its attributes—such as product type, issue category, or region—and matched with agents who had the appropriate skill tags. The system automatically distributed cases fairly among available users.
+
+With Omni Supervisor, team leads and managers could now monitor live queue activity, agent status, and open capacity—offering transparency and real-time performance tracking.
+
+This solution ensures smarter, faster, and more balanced case assignments. It eliminated manual routing, increased response time, and improved agent efficiency, all while reducing dependency on developers and manual workflows.
+
+Techniques Used:
+Omni-Channel Routing Configuration for dynamic case distribution
+
+Presence Configuration to track agent availability
+
+Service Channels to define routing for the Case object
+
+Skills-Based Routing for intelligent agent matching
+
+Queues and Agent Capacity Management to avoid overload
+
+Omni Supervisor for real-time visibility
+
+Resources Used:
+Salesforce Omni-Channel (Routing Configs, Presence Status, Service Channels)
+
+Salesforce Setup for Queues, Skills, and Case Assignment Rules
+
+Lightning App Builder for Supervisor setup
+
+Real-time Monitoring Tools for queue performance
+
+Salesforce Admin tools for configuration and testing"	Shashikant	Creative Solutions	Salesforce is used as the platform, with Flow for backend logic and standard Salesforce functionality.
+	Review		"Use Case Overview
+We set up a process in Salesforce and Pardot where, when a customer or lead fills out a form, a prospect is created in Pardot. This prospect then syncs with Salesforce. If the contact does not already exist in Salesforce, it gets created and marked as a qualified contact."	"Contacts were being created without being assigned to any sales rep.
+
+In some cases, the related account wasn't found or linked, causing orphaned contacts.
+
+It was difficult for sales reps to find daily or weekly qualified contacts, making follow-up challenging."	"After form submission, a prospect is created in Pardot.
+
+During the Salesforce sync, our external action checks for existing account and contact:
+
+If they exist, it links them.
+
+If not, it creates both and qualifies the contact.
+
+Based on the vertical, the system automatically assigns the correct sales rep as the owner baseed on vertical.
+
+Notifications are sent in Salesforce and via email to inform the owner about the newly qualified contact.
+
+This ensures all qualified contacts are correctly assigned and easily tracked by sales"	Pavan	Creative Solutions	"In salesforce used invocable
+method,flow,Email alert."
+	Review		"Use Case Overview
+Our Salesforce org faced a recurring issue of duplicate Account and Contact creation across multiple entry points—Cases, Leads, Opportunities, and Messaging (chat). Each time a new record was created, there was no consistent check for existing Account or Contact records, leading to data integrity issues, inefficiencies, and poor reporting accuracy.
+
+To address this, we developed a bulkified and publicly accessible Apex class within our managed package. This class ensures that duplicate Account and Contact records are avoided by intelligently identifying existing records or creating new ones only when necessary. The solution supports both single-record and bulk operations, making it flexible for use across Flows, Apex triggers, and LWC components.
+
+Solution Components
+Apex Class for Account & Contact Matching
+Public Method in Managed Package: Created a public Apex class accessible across the managed package for reuse in all modules (Cases, Leads, Opportunities, Messaging).
+
+Bulkified Logic: Designed the class to process single or multiple records efficiently using maps and sets to minimize SOQL/DML and respect governor limits.
+
+Flexible Invocation: Supports both synchronous (e.g., LWC or Flow action) and asynchronous (e.g., batch jobs or triggers) calls.
+
+Matching & Creation Logic
+Email & Phone Matching: Searches for existing Contacts based on email or phone. If found, reuses the Contact and its related Account.
+
+Account Assignment: If the Contact is found without an Account, assigns or creates a suitable Account and links it.
+
+New Record Creation: If no match is found, creates both Account and Contact, ensuring data completeness.
+
+Integration Points
+Case Creation: Integrated into custom logic behind Web-to-Case, Email-to-Case, and manual Case creation to prevent duplicate Contacts.
+
+Lead Conversion: Called during lead conversion to match Contacts before creating new ones.
+
+Opportunity Creation: Used when sales reps create Opportunities directly, linking correct Contacts and Accounts.
+
+Chat Sessions: Invoked in chat-based interactions to associate the right Contact, even when initiated by anonymous users.
+
+User Journey
+Step 1: Record Created (Case, Lead, Opportunity, or Chat)
+A user or automation triggers the creation of a new Case, Lead, Opportunity, or Messaging Session.
+
+Step 2: Apex Class Executed
+The Apex method runs behind the scenes—either as part of a Flow, Apex Trigger, or direct call from UI logic.
+
+Step 3: Record Matched or Created
+The system attempts to find existing Accounts/Contacts using predefined matching logic. If found, it links them. If not, it creates them.
+
+Step 4: Relationship Established
+The resulting Contact is always linked to a valid Account, and the source record (e.g., Case or Opportunity) is associated correctly—ensuring data consistency.
+
+Technical Highlights
+Apex Class: Public, bulk-safe, exposed within managed package.
+
+SOQL Optimization: Uses indexed fields like email and phone for quick lookups.
+
+Governor-Limit Safe: Efficient handling of bulk scenarios with minimal DML/SOQL calls.
+
+Reusable Design: Can be reused across components (Flows, Triggers, LWC, Bots)."	"Before implementing our deduplication Apex class, Account and Contact creation in our Salesforce org was inconsistent and error-prone. Multiple processes—such as Case creation, Lead conversion, Opportunity creation, and Chat interactions—created or linked records without proper checks, leading to major data quality issues:
+
+Widespread Duplication: Contacts and Accounts were often created repeatedly for the same person or company across different entry points.
+
+No Centralized Logic: Each business process had its own logic (or none) to create or associate Contacts and Accounts, resulting in fragmented and unmanageable rules.
+
+Inaccurate Reporting: Multiple records for the same customer skewed analytics and KPIs, affecting forecasts and service quality metrics.
+
+Operational Inefficiencies: Agents and sales reps often had to merge records manually or deal with duplicate data during day-to-day operations.
+
+Customer Experience Impact: Support teams couldn't get a unified view of a customer’s history, leading to repeated questions and frustration for returning clients.
+
+Due to these challenges, our teams faced:
+
+Confusion and delays in identifying the correct customer or account.
+
+Degraded data quality affecting automation, campaigns, and workflows.
+
+Increased time spent on manual cleanup and record merging.
+
+A lack of trust in CRM data from both sales and support teams.
+"	"To address the rising issue of duplicate Accounts and Contacts being created across multiple business processes, I developed a bulkified Apex class that centrally handles Account and Contact identification and creation logic. This class is publicly available within our managed package and supports both single-record and bulk operations.
+
+The solution is triggered during the creation of new Cases, Leads, Opportunities, and Chat interactions. Whenever a user initiates any of these processes, the method checks if a matching Contact and Account already exist in the system. If found, it reuses those records; if not, it creates them and ensures they are correctly linked.
+
+The logic evaluates key attributes such as email, phone, and company name to detect potential duplicates. It uses Map<String, Contact> and Map<String, Account> for efficient upsert operations, ensuring no redundant DML or SOQL queries—even when thousands of records are processed.
+
+This Apex method has now been integrated into multiple flows, components, and automations across our org—standardizing how Accounts and Contacts are managed and significantly reducing duplication.
+
+As a result, the solution has improved our CRM data quality, eliminated redundancy, and ensured consistent customer identity across support and sales processes.
+
+Techniques Used:
+Bulkified Apex Class with input flexibility for single or multiple records
+
+Upsert Logic using custom matching rules on key fields (Email, Company, Phone)
+
+Centralized Method reused in Case, Lead, Opportunity, and Chat processes
+
+Efficient Data Structures to avoid duplicate queries and operations
+
+Account–Contact Linking Logic ensuring every Contact is always tied to an Account
+
+Resources Used:
+Salesforce Apex (Classes, Methods, Collections)
+
+Custom Matching Rules for detecting duplicates
+
+Integration with Flows, Triggers, and LWC components
+
+Salesforce Developer Console and Debug Logs for testing
+
+Managed Package to expose method for internal components
+"	Shashikant	Creative Solutions	Salesforce is used as the platform, with Apex for backend logic
