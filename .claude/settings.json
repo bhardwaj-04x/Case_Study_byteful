@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node preview.js --file unified-data-management-with-graphql.html)",
+      "Bash(python generate_pages.py)",
+      "Bash(python.exe generate_pages.py)",
+      "Bash(node preview.js --file case-study-6-review.html)",
+      "Bash(node \"C:/Users/prana/OneDrive/Desktop/CaseStudyByteful/preview.js\" --file case-study-6-review.html)"
+    ]
+  }
+}
